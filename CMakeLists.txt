@@ -49,14 +49,40 @@ file(GLOB TEST_SRCS
     tests/*.cpp
 )
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+add_executable(${TEST_NAME}
+    ${SRCS}
+    ${TEST_SRCS}
+)
+
+target_include_directories(${TEST_NAME} PUBLIC
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/include
+)
+target_include_directories(${TEST_NAME} PRIVATE
+    ${PATHS}
+    ${CMAKE_BINARY_DIR}
+    )
+target_link_libraries(${TEST_NAME} PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(${TEST_NAME} PRIVATE ${LIBRARY_NAME})
+target_link_libraries(${TEST_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${TEST_NAME} PRIVATE pthread)
+target_link_libraries(${TEST_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         /W4
     )
+    target_compile_options(${TEST_NAME} PRIVATE
+        /W4
+    )
 else ()
     target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
+    target_compile_options(${TEST_NAME} PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
 endif()
@@ -69,3 +95,6 @@ set(CPACK_GENERATOR DEB)
 set(CPACK_PACKAGE_CONTACT example@example.com)
 
 include(CPack)
+enable_testing()
+
+add_test(${TEST_NAME} ${TEST_NAME})
