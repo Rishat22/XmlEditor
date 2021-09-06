@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 	auto mainWidget = new QWidget;
 	mainWidget->setLayout(m_MainLayout);
 	setCentralWidget(mainWidget);
+	resize(1000, 600);
 }
 
 MainWindow::~MainWindow()
