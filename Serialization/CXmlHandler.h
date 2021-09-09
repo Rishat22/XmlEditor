@@ -23,7 +23,7 @@
 #include "pugi/pugiconfig.hpp"
 #include "pugi/pugixml.hpp"
 
-namespace USerialization
+namespace Serialization
 {
 	
 

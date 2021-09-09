@@ -3,6 +3,7 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include <QDir>
+#include "WdgSearch.h"
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,7 +14,25 @@ MainWindow::MainWindow(QWidget *parent)
 	, m_lasSelectedPath(QString())
 {
 	setObjectName("MainWindow");
-	m_FilterDataModel.setSourceModel(m_TreeView->model());
+
+	QStringList columns;
+	columns << "TagName" << "Type" << "Value";
+	m_SourceModel.setColumns(columns);
+	m_FilterDataModel.setSourceModel(&m_SourceModel);
+
+	/* Testing add data to model */
+	QObject* item1 = new QObject();
+	item1->setObjectName("Father");
+	item1->setProperty("Tag", 45);
+	//Item2 (parent: item1)
+	QObject* item2 = new QObject(item1);
+	item2->setProperty("Tag", "Son");
+	item2->setProperty("Type", "Int");
+	item2->setProperty("Value", 14);
+	//Adds entire item1 branch
+	m_SourceModel.addItem(item1, QModelIndex());
+	/* ---------------------------------------*/
+
 	m_TreeView->setModel(&m_FilterDataModel);
 	SetStyleSheet();
 	m_MainLayout->addWidget(m_TreeView);
@@ -60,7 +79,6 @@ QList<QAction*> MainWindow::CreateFileActions()
 		loadData(std::move(fileName.toStdString()));
 	});
 	fileActions.push_back(openAct);
-
 	auto saveAct = new QAction(tr("&Save"), this);
 	saveAct->setShortcuts(QKeySequence::Save);
 	saveAct->setStatusTip(tr("Save the document to disk"));

@@ -25,7 +25,7 @@
 #include "Serialization/CXmlHandler.h"
 
 /* Step 2: Use namespace USerialization */
-using namespace USerialization;
+using namespace Serialization;
 
 /* Step 3: Class CTestSerialization is a child of CXmlHandler */
 /**

@@ -1,5 +1,6 @@
 #ifndef STABLEDECLARATION_H
 #define STABLEDECLARATION_H
+#include <string>
 #include <list>
 #include <vector>
 #include <QDebug>
@@ -27,5 +28,8 @@ class CGraphicsItem;
 class CItemComboBox;
 class CWdgSelectionMenu;
 class CWdgScene;
+
+/* Custom classes */
+class WdgSearch;
 
 #endif // STABLEDECLARATION_H

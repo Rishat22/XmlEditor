@@ -19,7 +19,7 @@
 #include <string>
 #include "pugi/pugixml.hpp"
 
-namespace USerialization
+namespace Serialization
 {
 	
 /**
@@ -32,11 +32,11 @@ class CXmlNode
 public:
 	CXmlNode();
 	CXmlNode(const CXmlNode& crXmlNode);
-	CXmlNode(std::string strFileName, CXmlNode* pPreviousNode = NULL);
+	CXmlNode(std::string strFileName, CXmlNode* pPreviousNode = nullptr);
 	
 	~CXmlNode();
 	
-	bool SetNode(std::string strNodeName, CXmlNode* pPreviousNode = NULL);
+	bool SetNode(std::string strNodeName, CXmlNode* pPreviousNode = nullptr);
 	
 	bool AddAttribute(std::string strAttributeName, int s32Attribute);
 	bool AddAttribute(std::string strAttributeName, double f64Attribute);

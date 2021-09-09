@@ -10,7 +10,7 @@
 
 #include "CXmlNode.h"
 
-namespace USerialization
+namespace Serialization
 {
 	
 /**
@@ -37,9 +37,9 @@ namespace USerialization
  *******************************************************************************
  */
 CXmlNode::CXmlNode()
-	: m_pPreviousNode(NULL)
-	, m_pxml_document(NULL)
-	, m_pxml_node(NULL)
+	: m_pPreviousNode(nullptr)
+	, m_pxml_document(nullptr)
+	, m_pxml_node(nullptr)
 {
 }
 
@@ -67,9 +67,9 @@ CXmlNode::CXmlNode()
  *******************************************************************************
  */
 CXmlNode::CXmlNode(const CXmlNode& /*crXmlNode*/)
-	: m_pPreviousNode(NULL)
-	, m_pxml_document(NULL)
-	, m_pxml_node(NULL)
+	: m_pPreviousNode(nullptr)
+	, m_pxml_document(nullptr)
+	, m_pxml_node(nullptr)
 {
 }
 
@@ -77,14 +77,14 @@ CXmlNode::CXmlNode(const CXmlNode& /*crXmlNode*/)
  *******************************************************************************
  *
  *   \par Name:		
- *              CXmlNode(std::string strNodeName, CXmlNode* pPreviousNode = NULL) \n
+ *              CXmlNode(std::string strNodeName, CXmlNode* pPreviousNode = nullptr) \n
  *
  *   \par Purpose:
  * 				Constructor of Node \n
  *
  *   \par Inputs:     
  * 				std::string strNodeName - name of the node. \n
- * 				if(pPreviousNode == NULL) strNodeName is the name of the file \n
+ * 				if(pPreviousNode == nullptr) strNodeName is the name of the file \n
  * 				
  * 				CXmlNode* pPreviousNode - pointer to a previous node \n
  *
@@ -100,12 +100,12 @@ CXmlNode::CXmlNode(const CXmlNode& /*crXmlNode*/)
  *******************************************************************************
  */
 CXmlNode::CXmlNode(std::string strNodeName, CXmlNode* pPreviousNode)
-	: m_pPreviousNode(NULL)
-	, m_pxml_document(NULL)
-	, m_pxml_node(NULL)
+	: m_pPreviousNode(nullptr)
+	, m_pxml_document(nullptr)
+	, m_pxml_node(nullptr)
 	, m_strNodeName(strNodeName)
 {
-	if(pPreviousNode == NULL)
+	if(pPreviousNode == nullptr)
 	{
 		m_pxml_document = new(pugi::xml_document);
 	}
@@ -113,11 +113,11 @@ CXmlNode::CXmlNode(std::string strNodeName, CXmlNode* pPreviousNode)
 	{
 		m_pxml_node = new(pugi::xml_node);
 		
-		if(pPreviousNode->m_pxml_document != NULL)
+		if(pPreviousNode->m_pxml_document != nullptr)
 		{
 			*m_pxml_node = pPreviousNode->m_pxml_document->append_child();
 		}
-		if(pPreviousNode->m_pxml_node != NULL)
+		if(pPreviousNode->m_pxml_node != nullptr)
 		{
 			*m_pxml_node = pPreviousNode->m_pxml_node->append_child();
 		}
@@ -151,11 +151,11 @@ CXmlNode::CXmlNode(std::string strNodeName, CXmlNode* pPreviousNode)
  */
 CXmlNode::~CXmlNode()
 {
-	if(m_pxml_document != NULL)
+	if(m_pxml_document != nullptr)
 	{
 		delete m_pxml_document;
 	}
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		delete m_pxml_node;
 	}
@@ -165,14 +165,14 @@ CXmlNode::~CXmlNode()
  *******************************************************************************
  *
  *   \par Name:		
- *              bool SetNode(std::string strNodeName, CXmlNode* pPreviousNode = NULL) \n
+ *              bool SetNode(std::string strNodeName, CXmlNode* pPreviousNode = nullptr) \n
  *
  *   \par Purpose:
  * 				Sets the Node \n
  *
  *   \par Inputs:     
  * 				std::string strNodeName - name of the node. \n
- * 				if(pPreviousNode == NULL) strNodeName is the name of the file \n
+ * 				if(pPreviousNode == nullptr) strNodeName is the name of the file \n
  * 
  * 				CXmlNode* pPreviousNode - pointer to previous node in xml structure \n
  *
@@ -191,9 +191,9 @@ bool CXmlNode::SetNode(std::string strNodeName, CXmlNode* pPreviousNode)
 {
 	m_strNodeName = strNodeName;
 	
-	if(pPreviousNode == NULL)
+	if(pPreviousNode == nullptr)
 	{
-		if(m_pxml_document != NULL)
+		if(m_pxml_document != nullptr)
 		{
 			return false;
 		}
@@ -201,18 +201,18 @@ bool CXmlNode::SetNode(std::string strNodeName, CXmlNode* pPreviousNode)
 	}
 	else
 	{
-		if(m_pxml_node != NULL)
+		if(m_pxml_node != nullptr)
 		{
 			return false;
 		}
 		
 		m_pxml_node = new(pugi::xml_node);
 		
-		if(pPreviousNode->m_pxml_document != NULL)
+		if(pPreviousNode->m_pxml_document != nullptr)
 		{
 			*m_pxml_node = pPreviousNode->m_pxml_document->append_child();
 		}
-		if(pPreviousNode->m_pxml_node != NULL)
+		if(pPreviousNode->m_pxml_node != nullptr)
 		{
 			*m_pxml_node = pPreviousNode->m_pxml_node->append_child();
 		}
@@ -254,7 +254,7 @@ bool CXmlNode::SetNode(std::string strNodeName, CXmlNode* pPreviousNode)
  */
 bool CXmlNode::SaveDocument(std::string strEncoding, pugi::xml_encoding encoding, const pugi::char_t* indent, unsigned int flags)
 {
-	if(m_pxml_document != NULL)
+	if(m_pxml_document != nullptr)
 	{
 		if(!strEncoding.empty())
 		{
@@ -305,7 +305,7 @@ bool CXmlNode::SaveDocument(std::string strEncoding, pugi::xml_encoding encoding
  */
 bool CXmlNode::AddAttribute(std::string strAttributeName, int s32Attribute)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_attribute(strAttributeName.data()) = static_cast<int>( s32Attribute );
 		return true;
@@ -341,7 +341,7 @@ bool CXmlNode::AddAttribute(std::string strAttributeName, int s32Attribute)
  */
 bool CXmlNode::AddAttribute(std::string strAttributeName, double f64Attribute)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_attribute(strAttributeName.data()) = f64Attribute;
 		return true;
@@ -377,7 +377,7 @@ bool CXmlNode::AddAttribute(std::string strAttributeName, double f64Attribute)
  */
 bool CXmlNode::AddAttribute(std::string strAttributeName, std::string strAttribute)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_attribute(strAttributeName.data()) = strAttribute.data();
 		return true;
@@ -413,7 +413,7 @@ bool CXmlNode::AddAttribute(std::string strAttributeName, std::string strAttribu
  */
 bool CXmlNode::AddAttribute(std::string strAttributeName, bool bAttribute)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_attribute(strAttributeName.data()) = bAttribute;
 		return true;
@@ -447,7 +447,7 @@ bool CXmlNode::AddAttribute(std::string strAttributeName, bool bAttribute)
  */
 bool CXmlNode::SetValue(std::string strValue)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(strValue.data());
 		return true;
@@ -481,7 +481,7 @@ bool CXmlNode::SetValue(std::string strValue)
  */
 bool CXmlNode::SetValue(const char *pChar)
 {
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(pChar);
 		return true;
@@ -517,7 +517,7 @@ bool CXmlNode::SetValue(u_char u8Value)
 {
 	char s[256];
 	sprintf(s, "%u", u8Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -553,7 +553,7 @@ bool CXmlNode::SetValue(char s8Value)
 {
 	char s[256];
 	sprintf(s, "%d", s8Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -589,7 +589,7 @@ bool CXmlNode::SetValue(u_int32_t u32Value)
 {
 	char s[256];
 	sprintf(s, "%u", u32Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -625,7 +625,7 @@ bool CXmlNode::SetValueHex(u_int32_t u32Value)
 {
 	char s[256];
 	sprintf(s, "%X", u32Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -661,7 +661,7 @@ bool CXmlNode::SetValue(int s32Value)
 {
 	char s[256];
 	sprintf(s, "%d", s32Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -697,7 +697,7 @@ bool CXmlNode::SetValue(double f64Value)
 {
 	char s[256];
 	sprintf(s, "%lf", f64Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -733,7 +733,7 @@ bool CXmlNode::SetValue(ulong u64Value)
 {
 	char s[256];
 	sprintf(s, "%lu", u64Value);
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
 		return true;
@@ -808,12 +808,12 @@ bool CXmlNode::SetValue(bool bValue)
  */
 bool CXmlNode::SetComment(std::string strComment)
 {
-	if(m_pxml_document != NULL)
+	if(m_pxml_document != nullptr)
 	{
 		m_pxml_document->append_child(pugi::node_comment).set_value(strComment.data());
 		return true;
 	}
-	if(m_pxml_node != NULL)
+	if(m_pxml_node != nullptr)
 	{
 		m_pxml_node->append_child(pugi::node_comment).set_value(strComment.data());
 		return true;

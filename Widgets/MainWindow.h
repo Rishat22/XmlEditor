@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include "StableDeclaration.h"
+#include "SettingsModel.h"
 #include "FilterDataModel.h"
-#include "WdgSearch.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +30,7 @@ private:
     QVBoxLayout* m_MainLayout;
     QTreeView* m_TreeView;
     WdgSearch* m_WdgSearch;
+	SettingsModel m_SourceModel;
     FilterDataModel m_FilterDataModel;
     QString m_lasSelectedPath;
 

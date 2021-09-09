@@ -10,7 +10,7 @@
 #include "CXmlHandler.h"
 #include "CXmlNode.h"
 
-namespace USerialization
+namespace Serialization
 {
 	
 /**
@@ -98,14 +98,14 @@ CXmlNode* CXmlHandler::NewDocument(std::string strFileName)
 {
 	m_lstNodes.clear();
 	
-	CXmlNode *pNode = NULL;
+	CXmlNode *pNode = nullptr;
 	m_lstNodes.push_back(CXmlNode());
 	
 	pNode = &( m_lstNodes.back() );
 
 	m_strFileName = strFileName;
 
-	if(pNode != NULL)
+	if(pNode != nullptr)
 	{
 		pNode->SetNode(m_strFileName);
 	}
@@ -140,12 +140,12 @@ CXmlNode* CXmlHandler::NewDocument(std::string strFileName)
  */
 CXmlNode* CXmlHandler::NewNode(std::string strNodeName, CXmlNode* pPreviousNode)
 {
-	CXmlNode *pNode = NULL;
+	CXmlNode *pNode = nullptr;
 	m_lstNodes.push_back(CXmlNode());
 	
 	pNode = &( m_lstNodes.back() );
 	
-	if(pNode != NULL)
+	if(pNode != nullptr)
 	{
 		pNode->SetNode(strNodeName, pPreviousNode);
 	}

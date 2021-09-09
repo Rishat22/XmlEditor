@@ -30,6 +30,7 @@ file(GLOB HRDS
 file(GLOB SRCS
     FilterDataModel.cpp
     TableModel.cpp
+    SettingsModel.cpp
     Widgets/*.cpp
     Serialization/*.cpp
     Serialization/pugi/*.cpp
