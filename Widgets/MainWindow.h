@@ -2,10 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTreeView>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
+#include "StableDeclaration.h"
 #include "FilterDataModel.h"
 #include "WdgSearch.h"
 
@@ -22,15 +19,19 @@ public:
     ~MainWindow();
 
 private slots:
-	void BtnSearchClicked(const QString& text);
+    void BtnSearchClicked(const QString& text);
+    void saveData(const std::string& strFileName);
+    void loadData(const std::string& strFileName);
 private:
-	void SetStyleSheet();
+    void AddMenuBar();
+    void SetStyleSheet();
+    QList<QAction*> CreateFileActions();
 private:
-	QVBoxLayout* m_MainLayout;
-//	QStand* m_SourceModel;
-	QTreeView* m_TreeView;
-	WdgSearch* m_WdgSearch;
-	FilterDataModel m_FilterDataModel;
+    QVBoxLayout* m_MainLayout;
+    QTreeView* m_TreeView;
+    WdgSearch* m_WdgSearch;
+    FilterDataModel m_FilterDataModel;
+    QString m_lasSelectedPath;
 
 };
 

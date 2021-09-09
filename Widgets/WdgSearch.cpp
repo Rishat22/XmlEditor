@@ -9,8 +9,8 @@ WdgSearch::WdgSearch(QWidget *parent)
 	setObjectName("WdgSearch");
 	m_SearchBtn->setObjectName("SearchButton");
 	m_MainLayout->addWidget(m_SearchEdit);
-	m_MainLayout->addStretch();
 	m_MainLayout->addWidget(m_SearchBtn);
+	m_MainLayout->addStretch();
 
 	connect(m_SearchBtn, &QPushButton::clicked,
 	this, [&]()

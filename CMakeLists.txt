@@ -28,7 +28,8 @@ file(GLOB HRDS
     Serialization/pugi/*.hpp
 )
 file(GLOB SRCS
-    *.cpp
+    FilterDataModel.cpp
+    TableModel.cpp
     Widgets/*.cpp
     Serialization/*.cpp
     Serialization/pugi/*.cpp
@@ -46,7 +47,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 file(GLOB TEST_SRCS
-    tests/*.cpp
+    Tests/*.cpp
 )
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 add_executable(${TEST_NAME}
