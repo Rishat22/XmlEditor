@@ -1,9 +1,10 @@
 /*****************************************************************************
 *
-*   File: CBaseItem.cpp
+*   File: BaseSetting.cpp
 *
-*   Description: This file implements class CBaseItem.
-*		 This class incapsulates item that has Id, Name, GUI Name and various data.
+*   Description: This file implements class BaseSetting.
+*		 This class is an interface for storing settings data.
+*		 For specific settings, you need to override GetDataByTag method
 *
 *
 *****************************************************************************/
@@ -16,13 +17,13 @@ namespace Serialization
  *******************************************************************************
  *
  *   \par Name:
- *              BOOL operator ==(const CBaseItem& crItem) const \n
+ *              BOOL operator ==(const BaseSetting& crItem) const \n
  *
  *   \par Purpose:
  * 				operator == \n
  *
  *   \par Inputs:
- * 				const CBaseItem& - const reference to CBaseItem instance \n
+ * 				const BaseSetting& - const reference to BaseSetting instance \n
  *
  *   \par Outputs:
  * 				None \n
@@ -44,13 +45,13 @@ bool BaseSetting::operator == (const BaseSetting& crItem) const
  *******************************************************************************
  *
  *   \par Name:
- *              BOOL operator !=(const CBaseItem& crItem) const \n
+ *              BOOL operator !=(const BaseSetting& crItem) const \n
  *
  *   \par Purpose:
  * 				operator != \n
  *
  *   \par Inputs:
- * 				const CBaseItem& - const reference to CBaseItem instance \n
+ * 				const BaseSetting& - const reference to BaseSetting instance \n
  *
  *   \par Outputs:
  * 				None \n

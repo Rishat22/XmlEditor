@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<MainSettings>
+	<NameWidget>MainWidget</NameWidget>
+</MainSettings>
+<DefaultSettings>
+	<Size>
+		<ZoomType>Fixed</ZoomType>
+		<OpenFullScreen>True</OpenFullScreen>
+	</Size>
+	<Color>
+		<MainColor>128,128,128</MainColor>
+	</Color>
+</DefaultSettings>

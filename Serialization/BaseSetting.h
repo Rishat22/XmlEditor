@@ -1,20 +1,21 @@
 /*****************************************************************************
 *
-*   File: CBaseItem.h
+*   File: BaseSetting.h
 *
-*   Description: This file defines class CBaseItem.
-*		 This class incapsulates item that has Id, Name, GUI Name and various data.
+*   Description: This file implements class BaseSetting.
+*		 This class is an interface for storing settings data.
+*		 For specific settings, you need to override GetDataByTag method
 *
 *
 *****************************************************************************/
 /**
  ******************************************************************************
- * \file CBaseItem.h
- * File CBaseItem.h is the header of class CBaseItem.
+ * \file BaseSetting.h
+ * File BaseSetting.h is the header of class BaseSetting.
  ******************************************************************************
  */
-#ifndef _CBASEITEM_H_
-#define _CBASEITEM_H_
+#ifndef _BASESETTING_H_
+#define _BASESETTING_H_
 
 #include <Serialization/CXmlHandler.h>
 #include <StableDeclaration.h>
@@ -42,4 +43,4 @@ private:
 };
 
 }
-#endif // _CBASEITEM_H_
+#endif // _BASESETTING_H_
