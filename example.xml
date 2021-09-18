@@ -4,7 +4,7 @@
 </MainSettings>
 <DefaultSettings>
 	<Size>
-		<ZoomType>Fixed</ZoomType>
+		<ResizeType>Fixed</ResizeType>
 		<OpenFullScreen>True</OpenFullScreen>
 	</Size>
 	<Color>

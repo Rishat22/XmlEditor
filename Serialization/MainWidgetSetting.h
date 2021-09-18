@@ -32,7 +32,7 @@ public:
 protected:
     virtual QVariant GetDataByTag(const std::string& strTag, const std::string& strData) const override;
 private:
-	QVariant CreateZoomTypeList(const std::string& strData);
+	QVariant CreateResizeTypeList(const std::string& strData);
 private:
 	std::map< std::string, GetDataByTagFunc > m_GetDataFunctions;
 };

@@ -22,10 +22,10 @@ MainWidgetSetting::MainWidgetSetting()
 	{
 		return QString(strData.data());
 	};
-	m_GetDataFunctions["ZoomType"] =
+	m_GetDataFunctions["ResizeType"] =
 	[&](const std::string& strData) -> QVariant
 	{
-		return this->CreateZoomTypeList(strData);
+		return this->CreateResizeTypeList(strData);
 	};
 	m_GetDataFunctions["MainColor"] =
 			[](const std::string& strData) -> QVariant
@@ -42,14 +42,14 @@ QVariant MainWidgetSetting::GetDataByTag(const std::string& strTag, const std::s
 	return tagDataIt->second(strData);
 }
 
-QVariant MainWidgetSetting::CreateZoomTypeList(const std::string& strData)
+QVariant MainWidgetSetting::CreateResizeTypeList(const std::string& strData)
 {
-	QStringList zoomTypes {"Fixed", "Expanded", "FixedHeight"};
-	auto findIt = std::find(zoomTypes.begin(), zoomTypes.end(), strData.data());
-	if(findIt == zoomTypes.end())
-		throw Tools::IncorrectTagValueList(zoomTypes);
-	std::iter_swap(zoomTypes.begin(), findIt); //Put current first
-	return zoomTypes;
+	QStringList resizeTypes {"Fixed", "Expanded", "FixedHeight"};
+	auto findIt = std::find(resizeTypes.begin(), resizeTypes.end(), strData.data());
+	if(findIt == resizeTypes.end())
+		throw Tools::IncorrectTagValueList(resizeTypes);
+	std::iter_swap(resizeTypes.begin(), findIt); //Put current first
+	return resizeTypes;
 }
 
 

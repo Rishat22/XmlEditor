@@ -4,6 +4,14 @@
 #include <QWidget>
 #include <QAbstractItemModel>
 
+/* ToDo It can put all the functionality with columns in a separate class */
+enum class SettingsColumnsType
+{
+	TagName = 0,
+	Type,
+	Value
+};
+
 class SettingsModel : public QAbstractItemModel
 {
     Q_OBJECT

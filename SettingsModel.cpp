@@ -62,7 +62,11 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 	{
 		return Qt::NoItemFlags;
 	}
-	return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+	auto itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+	if(static_cast<SettingsColumnsType>(index.column()) == SettingsColumnsType::Value)
+		return itemFlags | Qt::ItemIsEditable;
+
+	return itemFlags;
 }
 
 QVariant SettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -82,5 +86,6 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
   if (role == Qt::DisplayRole) {
 	return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
   }
+  /* ToDo add work with Qt::EditRole */
   return QVariant();
 }

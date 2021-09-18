@@ -35,6 +35,7 @@ public:
     const QVariant& GetData(void) const;
     QVariant GetData(void);
     std::string Tag() const;
+	/* Need to add a description for the tags */
 protected:
     virtual QVariant GetDataByTag(const std::string& strTag, const std::string& strData) const = 0;
 private:

@@ -7,6 +7,7 @@
 
 namespace Tools
 {
+/* ToDo Add exceptions for all other types */
 struct LoadSettingsException : public std::exception
 {
     virtual const char* what () const throw ()
