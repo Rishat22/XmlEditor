@@ -2,14 +2,10 @@
 
 SettingsModel::SettingsModel(QObject *parent)
   : QAbstractItemModel(parent)
+  , m_NameColumns{"TagName", "Type", "Value"}
 {
   //Creating instance of virtual root item
   m_RootItem = new QObject(this);
-}
-
-void SettingsModel::setColumns(const QStringList& columns)
-{
-  m_Columns = columns;
 }
 
 void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
@@ -56,7 +52,26 @@ int SettingsModel::rowCount(const QModelIndex &parent) const
 int SettingsModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent)
-  return m_Columns.count();
+  return m_NameColumns.count();
+}
+
+
+Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
+{
+	if(!index.isValid())
+	{
+		return Qt::NoItemFlags;
+	}
+	return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+}
+
+QVariant SettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
+	{
+		return m_NameColumns.at(section);
+	}
+	return QVariant();
 }
 
 QVariant SettingsModel::data(const QModelIndex &index, int role) const
@@ -65,7 +80,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	return QVariant();
   //Cell values retrieved from QObject properties
   if (role == Qt::DisplayRole) {
-	return objByIndex(index)->property(m_Columns.at(index.column()).toUtf8());
+	return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
   }
   return QVariant();
 }

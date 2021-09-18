@@ -15,18 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setObjectName("MainWindow");
 
-	QStringList columns;
-	columns << "TagName" << "Type" << "Value";
-	m_SourceModel.setColumns(columns);
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
 
 	/* Testing add data to model */
 	QObject* item1 = new QObject();
 	item1->setObjectName("Father");
-	item1->setProperty("Tag", 45);
+	item1->setProperty("TagName", "Father");
 	//Item2 (parent: item1)
 	QObject* item2 = new QObject(item1);
-	item2->setProperty("Tag", "Son");
+	item2->setProperty("TagName", "Son");
 	item2->setProperty("Type", "Int");
 	item2->setProperty("Value", 14);
 	//Adds entire item1 branch

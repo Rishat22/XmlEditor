@@ -1,5 +1,6 @@
 #ifndef STABLEDECLARATION_H
 #define STABLEDECLARATION_H
+#include <iostream>
 #include <string>
 #include <list>
 #include <vector>

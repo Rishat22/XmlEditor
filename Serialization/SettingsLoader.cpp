@@ -1,3 +1,5 @@
+#include "Tools/Exceptions.h"
+#include "Serialization/MainWidgetSetting.h"
 #include "SettingsLoader.h"
 
 namespace Serialization
@@ -5,6 +7,7 @@ namespace Serialization
 
 SettingsLoader::SettingsLoader()
 	: CXmlHandler()
+	, m_BaseSettingType(BaseSettingType::UnknownSettings)
 {
 }
 
@@ -17,6 +20,23 @@ std::list<std::shared_ptr<BaseSetting>> SettingsLoader::Load(const std::string& 
 	m_Settings.clear();
 	CXmlHandler::Load(strFileName);
 	return m_Settings;
+}
+
+std::shared_ptr<BaseSetting> SettingsLoader::CreateSettings()
+{
+	switch (m_BaseSettingType)
+	{
+		case BaseSettingType::MainWidgetSettings:
+		{
+			return std::make_shared<MainWidgetSetting>();
+		}
+		case BaseSettingType::UnknownSettings:
+		default:
+		{
+			throw Tools::UnknownSettingsException();
+		}
+	}
+	return nullptr;
 }
 
 bool SettingsLoader::Save(const std::string& strFileName)
@@ -34,21 +54,6 @@ bool SettingsLoader::Save(const std::string& strFileName)
 	return bRes;
 }
 
-//void SettingsLoader::saveName(CXmlNode* parentNode, const CStripItemConfig& itemConfig)
-//{
-//	for(int paramIndex = BaseSetting::Name; paramIndex < BaseSetting::DataTypeLastElem; paramIndex++)
-//	{
-//		const auto stripItem = itemConfig.Item();
-//		if(!stripItem.HasData(paramIndex))
-//		{
-//			continue;
-//		}
-//		CXmlNode* itemNameParamNode = NewNode(stripItem.GetTag(paramIndex), parentNode);
-//		auto strData = stripItem.GetData(paramIndex);
-//		itemNameParamNode->SetValue(strData);
-//	}
-//}
-
 bool SettingsLoader::XmlNodeBegin(void)
 {
 	std::string currTagName;
@@ -62,41 +67,38 @@ bool SettingsLoader::XmlNodeBegin(void)
 bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 {
 	bool bRes = true;
-
-	std::string currTagName;
-	if(GetCurrentTag(currTagName))
+	try
 	{
-		auto curAddedSetting = std::make_shared<BaseSetting>();
-		m_Settings.push_back(curAddedSetting);
-		curAddedSetting->SetData(currTagName, strNodeValue);
-		qDebug() << "Set data to tag: " <<  currTagName.data();
+		std::string currTagName;
+		if(GetCurrentTag(currTagName))
+		{
+			auto curAddedSetting = CreateSettings();
+			m_Settings.push_back(curAddedSetting);
+			curAddedSetting->SetData(currTagName, strNodeValue);
+		}
+	}
+	catch (const Tools::LoadSettingsException& exception)
+	{
+		std::cout << "Error loading Settings." << std::endl;
+		std::cout << "Value = " << strNodeValue.data() << std::endl;
+		exception.what();
+	}
+	catch (const Tools::TypeException& exception)
+	{
+		exception.what();
+		bRes = false;
 	}
 
-//	if(m_vStrOfNodes[topNodeIndex] == "MainSettings")
-//	{
-//		if(m_vStrOfNodes[topNodeIndex + 1] == "NameWidget")
-//		{
-//			bRes = plastAddedSetting->SetData(m_vStrOfNodes[topNodeIndex + 1], strNodeValue);
-//			if(!bRes)
-//			{
-//				printf("Wrong NameWidget : %s \n", strNodeValue.data());
-//			}
-//		}
-//	}
-	if(bRes == false)
-	{
-		qDebug() << "Error loading Settings.";
-		qDebug() << "Value = " << strNodeValue.data();
-	}
 	return bRes;
 }
 
 bool SettingsLoader::GetCurrentTag(std::string& tagName)
 {
-	auto emptyIt = std::find_if(m_vStrOfNodes.begin(), m_vStrOfNodes.end(), std::string());
+	auto emptyIt = std::find(m_vStrOfNodes.begin(), m_vStrOfNodes.end(), std::string());
 	emptyIt--; //Last not empty
 	tagName = *emptyIt;
 	return emptyIt >= m_vStrOfNodes.begin() && emptyIt != m_vStrOfNodes.end();
 }
+
 
 }

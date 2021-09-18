@@ -16,6 +16,7 @@
 #ifndef _MAINWIDGETSETTING_H_
 #define _MAINWIDGETSETTING_H_
 
+#include <map>
 #include <StableDeclaration.h>
 #include "BaseSetting.h"
 
@@ -24,11 +25,16 @@ namespace Serialization
 
 class MainWidgetSetting : public BaseSetting
 {
+	using GetDataByTagFunc = std::function<QVariant(const std::string& strData)>;
 public:
-    MainWidgetSetting() = default;
+	MainWidgetSetting();
     virtual ~MainWidgetSetting() = default;
 protected:
     virtual QVariant GetDataByTag(const std::string& strTag, const std::string& strData) const override;
+private:
+	QVariant CreateZoomTypeList(const std::string& strData);
+private:
+	std::map< std::string, GetDataByTagFunc > m_GetDataFunctions;
 };
 
 }

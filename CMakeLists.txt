@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 set(PROJECT_NAME XmlEditor)
 set(TEST_NAME test_${PROJECT_NAME})
-set(PATHS Widgets/ Serialization/ Serialization/pugi/)
 
 if(DEFINED ENV{GITHUB_RUN_NUMBER})
     project(${PROJECT_NAME} VERSION 0.0.$ENV{GITHUB_RUN_NUMBER})
@@ -21,8 +20,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
+set(PATHS
+    Widgets/
+    Tools/
+    Serialization/
+    Serialization/pugi/
+)
+
 file(GLOB HRDS
     *.h
+    Tools/*.h
     Widgets/*.h
     Serialization/*.h
     Serialization/pugi/*.hpp
@@ -31,6 +38,8 @@ file(GLOB SRCS
     FilterDataModel.cpp
     TableModel.cpp
     SettingsModel.cpp
+    MathFunc.cpp
+    Tools/*.cpp
     Widgets/*.cpp
     Serialization/*.cpp
     Serialization/pugi/*.cpp
