@@ -1,8 +1,10 @@
 #ifndef SETTINGSMODEL_H
 #define SETTINGSMODEL_H
-#include <memory>
 #include <QWidget>
 #include <QAbstractItemModel>
+#include "Serialization/SettingsLoader.h"
+
+using namespace Serialization;
 
 /* ToDo It can put all the functionality with columns in a separate class */
 enum class SettingsColumnsType
@@ -32,6 +34,9 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+	/* Settings Loading */
+	void loadSettings(const std::string& strFileName);
+	void saveSettings(const std::string& strFileName);
 protected:
     //Convenient method to retrieve item object from index
     QObject* objByIndex(const QModelIndex &index) const;
@@ -39,5 +44,6 @@ protected:
     QStringList m_NameColumns;
     //Virtual root item used to store the list of root content items
     QObject* m_RootItem;
+	SettingsLoader m_SettingsLoader;
 };
 #endif // SETTINGSMODEL_H

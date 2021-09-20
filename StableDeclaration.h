@@ -32,5 +32,6 @@ class CWdgScene;
 
 /* Custom classes */
 class WdgSearch;
+class SettingsModel;
 
 #endif // STABLEDECLARATION_H

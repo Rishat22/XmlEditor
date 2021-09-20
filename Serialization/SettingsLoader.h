@@ -3,7 +3,6 @@
 #include <memory>
 #include <Serialization/CXmlHandler.h>
 #include "StableDeclaration.h"
-#include "SettingsModel.h"
 #include "BaseSetting.h"
 
 namespace Serialization
@@ -18,10 +17,9 @@ class SettingsLoader : public CXmlHandler
 {
 
 public:
-    SettingsLoader();
+	SettingsLoader(SettingsModel& model);
     virtual ~SettingsLoader() = default;
 public:
-    void SetModel(const SettingsModel& model);
     bool Save(const std::string& strFileName);
     std::list<std::shared_ptr<BaseSetting> > Load(const std::string& strFileName);
 
@@ -34,6 +32,8 @@ private:
 private:
     std::list<std::shared_ptr<BaseSetting>> m_Settings;
 	BaseSettingType m_BaseSettingType;
+	SettingsModel& m_SourceModel;
+	QObject* m_ParentItem;
 };
 
 }

@@ -17,19 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
 
-	/* Testing add data to model */
-	QObject* item1 = new QObject();
-	item1->setObjectName("Father");
-	item1->setProperty("TagName", "Father");
-	//Item2 (parent: item1)
-	QObject* item2 = new QObject(item1);
-	item2->setProperty("TagName", "Son");
-	item2->setProperty("Type", "Int");
-	item2->setProperty("Value", 14);
-	//Adds entire item1 branch
-	m_SourceModel.addItem(item1, QModelIndex());
-	/* ---------------------------------------*/
-
 	m_TreeView->setModel(&m_FilterDataModel);
 	SetStyleSheet();
 	m_MainLayout->addWidget(m_TreeView);
@@ -103,17 +90,15 @@ QList<QAction*> MainWindow::CreateFileActions()
 void MainWindow::loadData(const std::string& strFileName)
 {
 	if(strFileName.empty())
-	{
 		return;
-	}
+	m_SourceModel.loadSettings(strFileName);
 }
 
 void MainWindow::saveData(const std::string& strFileName)
 {
 	if(strFileName.empty())
-	{
 		return;
-	}
+	m_SourceModel.saveSettings(strFileName);
 }
 
 MainWindow::~MainWindow()

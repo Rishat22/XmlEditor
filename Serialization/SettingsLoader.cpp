@@ -1,17 +1,16 @@
 #include "Tools/Exceptions.h"
 #include "Serialization/MainWidgetSetting.h"
+#include "SettingsModel.h"
 #include "SettingsLoader.h"
 
 namespace Serialization
 {
 
-SettingsLoader::SettingsLoader()
+SettingsLoader::SettingsLoader(SettingsModel& model)
 	: CXmlHandler()
 	, m_BaseSettingType(BaseSettingType::UnknownSettings)
-{
-}
-
-void SettingsLoader::SetModel(const SettingsModel& /*model*/)
+	, m_SourceModel(model)
+	, m_ParentItem(nullptr)
 {
 }
 
