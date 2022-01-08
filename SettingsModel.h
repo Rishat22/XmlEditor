@@ -23,6 +23,7 @@ public:
 
     //Adds child item from given parent item (parentIdx)
     void addItem(QObject* item, const QModelIndex &parentIdx);
+	void updateItem(QObject* item, const SettingTagInfo& tagInfo);
 
     //Abstract virtual methods that needs to be implemented
     QVariant data(const QModelIndex &index, int role) const override;

@@ -4,36 +4,36 @@
 #include <Serialization/CXmlHandler.h>
 #include "StableDeclaration.h"
 #include "BaseSetting.h"
+#include "TagsInfoLoader.h"
 
 namespace Serialization
 {
-enum class BaseSettingType
-{
-	UnknownSettings,
-	MainWidgetSettings
-};
 
 class SettingsLoader : public CXmlHandler
 {
 
 public:
 	SettingsLoader(SettingsModel& model);
-    virtual ~SettingsLoader() = default;
+	virtual ~SettingsLoader() = default;
 public:
-    bool Save(const std::string& strFileName);
-    std::list<std::shared_ptr<BaseSetting> > Load(const std::string& strFileName);
+	bool Save(const std::string& strFileName);
+	std::list<std::shared_ptr<BaseSetting> > Load(const std::string& strFileName);
 
-	std::shared_ptr<BaseSetting> CreateSettings();
-    bool XmlNodeBegin(void) override;
-    bool XmlNodeDecode(const std::string& strNodeValue) override;
+//	std::shared_ptr<BaseSetting> CreateSettings();
+	bool XmlNodeBegin(void) override;
+	bool XmlNodeDecode(const std::string& strNodeValue) override;
 
 private:
-    bool GetCurrentTag(std::string& tagName);
+	bool LoadTagsInfo(const std::string& strFileName);
+	bool GetCurrentTag(std::string& tagName);
 private:
-    std::list<std::shared_ptr<BaseSetting>> m_Settings;
-	BaseSettingType m_BaseSettingType;
+	TagsInfoLoader m_TagsInfoLoader;
+	std::list<std::shared_ptr<BaseSetting>> m_Settings;
 	SettingsModel& m_SourceModel;
+	QObject* m_RootItem;
 	QObject* m_ParentItem;
+	QObject* m_CurrentItem;
+
 };
 
 }

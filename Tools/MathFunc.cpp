@@ -18,9 +18,9 @@ QColor MathFunc::StringToColor(const std::string& strColor)
 	return QColor(r, g, b, a);
 }
 
-std::vector<std::string> MathFunc::SplitString(const std::string& strText, char delimiter)
+std::list<std::string> MathFunc::SplitString(const std::string& strText, char delimiter)
 {
-	std::vector<std::string> substringsSet;
+	std::list<std::string> substringsSet;
 
 	std::string::size_type start = 0;
 	std::string::size_type stop = strText.find_first_of(delimiter);

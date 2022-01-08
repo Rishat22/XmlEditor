@@ -38,6 +38,7 @@ file(GLOB SRCS
     FilterDataModel.cpp
     TableModel.cpp
     SettingsModel.cpp
+    ListItemDelegate.cpp
     MathFunc.cpp
     Tools/*.cpp
     Widgets/*.cpp

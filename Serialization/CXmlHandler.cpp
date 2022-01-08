@@ -227,6 +227,7 @@ bool CXmlHandler::Load(const std::string& strFileName)
 	if(result.status != pugi::status_ok)
 	{
 		m_lstNodes.clear();
+		printf("%s \n", result.description());
 		return false; /* error */
 	}
 

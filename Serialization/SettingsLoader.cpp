@@ -1,5 +1,4 @@
 #include "Tools/Exceptions.h"
-#include "Serialization/MainWidgetSetting.h"
 #include "SettingsModel.h"
 #include "SettingsLoader.h"
 
@@ -8,35 +7,44 @@ namespace Serialization
 
 SettingsLoader::SettingsLoader(SettingsModel& model)
 	: CXmlHandler()
-	, m_BaseSettingType(BaseSettingType::UnknownSettings)
 	, m_SourceModel(model)
+	, m_RootItem(nullptr)
 	, m_ParentItem(nullptr)
+	, m_CurrentItem(nullptr)
 {
 }
 
 std::list<std::shared_ptr<BaseSetting>> SettingsLoader::Load(const std::string& strFileName)
 {
 	m_Settings.clear();
-	CXmlHandler::Load(strFileName);
+	if(LoadTagsInfo(strFileName))
+	{
+		CXmlHandler::Load(strFileName);
+	}
 	return m_Settings;
 }
 
-std::shared_ptr<BaseSetting> SettingsLoader::CreateSettings()
+bool SettingsLoader::LoadTagsInfo(const std::string& strFileName)
 {
-	switch (m_BaseSettingType)
+	std::size_t LastSlashPos = strFileName.find_last_of("/");
+	auto tagInfoFileName = strFileName.substr(LastSlashPos + 1);
+	tagInfoFileName = tagInfoFileName.substr(0, tagInfoFileName.find_last_of("."));
+	m_TagsInfoLoader.Load(tagInfoFileName);
+	if(m_TagsInfoLoader.IsSettingsInfoFound())
 	{
-		case BaseSettingType::MainWidgetSettings:
-		{
-			return std::make_shared<MainWidgetSetting>();
-		}
-		case BaseSettingType::UnknownSettings:
-		default:
-		{
-			throw Tools::UnknownSettingsException();
-		}
+		return true;
 	}
-	return nullptr;
+	else
+	{
+		std::cout << "Information about the current name of the setting was not found: " << tagInfoFileName << std::endl;
+		return false;
+	}
 }
+
+//std::shared_ptr<BaseSetting> SettingsLoader::CreateSettings()
+//{
+
+//}
 
 bool SettingsLoader::Save(const std::string& strFileName)
 {
@@ -58,7 +66,24 @@ bool SettingsLoader::XmlNodeBegin(void)
 	std::string currTagName;
 	if(GetCurrentTag(currTagName))
 	{
-		qDebug() << "Create New tag: " <<  currTagName.data();
+		QObject* newItem = (m_ParentItem == nullptr) ? new QObject() : new QObject(m_ParentItem);
+		newItem->setObjectName(currTagName.data());
+		newItem->setProperty("TagName", currTagName.data());
+		if(m_ParentItem == nullptr)
+		{
+			m_ParentItem = newItem;
+			m_RootItem = newItem;
+			m_SourceModel.addItem(m_ParentItem, QModelIndex());
+		}
+		m_CurrentItem = newItem;
+//		else
+//		{
+//			m_ParentItem->objectName()
+//		}
+//		QObject* item2 = new QObject(item1);
+//		item2->setProperty("TagName", "Son");
+		//Adds entire item1 branch
+		/* ---------------------------------------*/
 	}
 	return true;
 }
@@ -66,14 +91,23 @@ bool SettingsLoader::XmlNodeBegin(void)
 bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 {
 	bool bRes = true;
+
 	try
 	{
+//		std::string currTagName;
+//		if(GetCurrentTag(currTagName))
+//		{
+//			auto currentTagInfo = CreateSettings();
+//			m_ParentItem->setProperty("Type", "String");
+//			m_ParentItem->setProperty("Value", strNodeValue.data());
+//			curAddedSetting->SetData(currTagName, strNodeValue);
+//		}
+
 		std::string currTagName;
-		if(GetCurrentTag(currTagName))
+		SettingTagInfo tagInfo;
+		if(GetCurrentTag(currTagName) && m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo))
 		{
-			auto curAddedSetting = CreateSettings();
-			m_Settings.push_back(curAddedSetting);
-			curAddedSetting->SetData(currTagName, strNodeValue);
+			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
 		}
 	}
 	catch (const Tools::LoadSettingsException& exception)
@@ -87,7 +121,6 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 		exception.what();
 		bRes = false;
 	}
-
 	return bRes;
 }
 

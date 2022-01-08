@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<SettingsFilesNames>
+	<!-- settings file name -->
+	<example>
+		<Tag>
+			<Name>MainWidget</Name>
+			<Type>String</Type>
+			<Description>
+				Set the Name for the main window. 
+				This changes the text in the header of the main window.
+			</Description>
+		</Tag>
+		<Tag>
+			<Name>WidgetWidth</Name>
+			<Type>Int</Type>
+			<Description>
+			</Description>
+		</Tag>
+		<Tag>
+			<Name>ResizeType</Name>
+			<Type>List</Type>
+			<Values>Fixed,Expanded,FixedHeight</Values>
+			<Description>
+				Set the resize type of main window. 
+				Allows you to choose a fixed window size or a fixed height only.
+			</Description>
+		</Tag>
+		<Tag>
+			<Name>OpenFullScreen</Name>
+			<Type>Bool</Type>
+			<Description>If set to 'True', the main window will open in full screen at startup.</Description>
+		</Tag>
+		<Tag>
+			<Name>MainColor</Name>
+			<Type>Color</Type>
+			<Description>Sets the background color of the main window</Description>
+		</Tag>
+	</example>
+	<!-- settings file name -->
+	<interfaces>
+		<Tag>
+			<Name>MainWidget</Name>
+			<Type>String</Type>
+			<Description>
+				Set the Name for the main window. 
+				This changes the text in the header of the main window.
+			</Description>
+		</Tag>
+		<Tag>
+			<Name>ResizeType</Name>
+			<Type>List</Type>
+			<Values>Fixed,Expanded,FixedHeight</Values>
+			<Description>
+				Set the resize type of main window. 
+				Allows you to choose a fixed window size or a fixed height only.
+			</Description>
+		</Tag>
+		<Tag>
+			<Name>OpenFullScreen</Name>
+			<Type>Bool</Type>
+			<Description>If set to 'True', the main window will open in full screen at startup.</Description>
+		</Tag>
+		<Tag>
+			<Name>MainColor</Name>
+			<Type>Color</Type>
+			<Description>Sets the background color of the main window</Description>
+		</Tag>
+	</interfaces>
+</SettingsFilesNames>

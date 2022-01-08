@@ -16,6 +16,14 @@ void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
 	endInsertRows();
 }
 
+void SettingsModel::updateItem(QObject* item, const SettingTagInfo& tagInfo)
+{
+	const auto& tagValue = tagInfo.GetData();
+	item->setProperty("Type", tagValue.typeName());
+	item->setProperty("Value", tagValue);
+//	item->SetToolTip(currTagName, newTagInfo.GetDesctription());
+}
+
 QObject *SettingsModel::objByIndex(const QModelIndex &index) const
 {
 	if (!index.isValid())
@@ -84,8 +92,19 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	if (!index.isValid())
 		return QVariant();
 	//Cell values retrieved from QObject properties
-	if (role == Qt::DisplayRole) {
-		return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+	switch (role) {
+	case Qt::DisplayRole:
+		{
+			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+		}
+	case Qt::EditRole:
+		{
+			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+		}
+	case Qt::TextAlignmentRole:
+		return Qt::AlignCenter;
+	default:
+		return QVariant();
 	}
 	/* ToDo add work with Qt::EditRole */
 	return QVariant();

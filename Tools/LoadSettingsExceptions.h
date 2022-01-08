@@ -12,8 +12,24 @@ struct LoadSettingsException : public std::exception
 {
     virtual const char* what () const throw ()
     {
-		return "Couldn't load tags \n";
+		return "Some proble with loading settings. \n";
     }
+};
+
+struct FileNotFoundException : LoadSettingsException
+{
+	FileNotFoundException(const std::string& fileName)
+		: m_msg(std::string("The settings file was not found: "
+							+ fileName + '\n'))
+	{
+	}
+
+	virtual const char* what () const throw ()
+	{
+		return m_msg.c_str();
+	}
+private:
+	std::string m_msg;
 };
 
 struct UnknownSettingsException : LoadSettingsException

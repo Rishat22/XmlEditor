@@ -92,6 +92,7 @@ void MainWindow::loadData(const std::string& strFileName)
 	if(strFileName.empty())
 		return;
 	m_SourceModel.loadSettings(strFileName);
+	m_TreeView->expandAll();
 }
 
 void MainWindow::saveData(const std::string& strFileName)

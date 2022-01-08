@@ -8,7 +8,7 @@ class MathFunc
 {
 public:
     MathFunc() = default;
-    static std::vector<std::string> SplitString(const std::string& strText , char delimiter);
+	static std::list<std::string> SplitString(const std::string& strText , char delimiter);
     static QColor StringToColor(const std::string& strColor);
 };
 

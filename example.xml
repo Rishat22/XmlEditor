@@ -5,6 +5,7 @@
 <DefaultSettings>
 	<Size>
 		<ResizeType>Fixed</ResizeType>
+		<WidgetWidth>1920</WidgetWidth>
 		<OpenFullScreen>True</OpenFullScreen>
 	</Size>
 	<Color>
