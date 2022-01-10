@@ -5,6 +5,7 @@
 #include <QDir>
 #include "WdgSearch.h"
 #include "MainWindow.h"
+#include "GeneralItemsDelegate.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -94,6 +95,7 @@ void MainWindow::loadData(const std::string& strFileName)
 	m_SourceModel.loadSettings(strFileName);
 	m_TreeView->expandAll();
 	m_TreeView->resizeColumnToContents(SettingsColumnsType::TagName);
+	m_TreeView->setItemDelegate(new GeneralItemsDelegate(m_TreeView));
 }
 
 void MainWindow::saveData(const std::string& strFileName)

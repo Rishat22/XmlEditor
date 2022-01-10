@@ -1,12 +1,12 @@
-#ifndef LISTITEMDELEGATE_H
-#define LISTITEMDELEGATE_H
+#ifndef GENERALITEMSDELEGATE_H
+#define GENERALITEMSDELEGATE_H
 #include <QItemDelegate>
 
-class ListItemDelegate : public QItemDelegate
+class GeneralItemsDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    ListItemDelegate(QObject *parent = nullptr);
+    GeneralItemsDelegate(QObject *parent = nullptr);
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void setEditorData(QWidget *editor, const QModelIndex &index) const override;
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
@@ -14,7 +14,9 @@ public:
 signals:
 public slots:
 private:
-
+    QWidget* createListEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void setListEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setListModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 };
 
-#endif // LISTITEMDELEGATE_H
+#endif // GENERALITEMSDELEGATE_H

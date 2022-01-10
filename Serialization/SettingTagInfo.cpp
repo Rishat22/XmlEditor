@@ -84,6 +84,15 @@ void SettingTagInfo::SetData(const std::string& strTag, const std::string& strDa
 
 void SettingTagInfo::SetData(const std::string& strData)
 {
+	if(m_Type == QVariant::StringList)
+	{
+		auto newListData = m_Data.toStringList();
+		auto firstElement = newListData.begin();
+		auto curElement = std::find(newListData.begin(), newListData.end(), strData.data());
+		std::swap(*firstElement, *curElement);
+		m_Data = newListData;
+		return;
+	}
 	QVariant newData(QString::fromStdString(strData));
 	newData.convert(m_Type);
 	m_Data = newData;
