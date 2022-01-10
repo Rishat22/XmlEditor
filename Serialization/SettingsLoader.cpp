@@ -115,7 +115,7 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
 		}
 		else
-			qDebug() << "can not find tag: " << currTagName.data();
+			std::cout << "can not find tag: " << currTagName.data();
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{

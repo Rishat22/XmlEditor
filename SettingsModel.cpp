@@ -106,10 +106,16 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	default:
 		return QVariant();
 	}
-	/* ToDo add work with Qt::EditRole */
 	return QVariant();
 }
 
+bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+	if(role != Qt::EditRole)
+		return false;
+
+	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
+}
 
 void SettingsModel::loadSettings(const std::string& strFileName)
 {
