@@ -64,13 +64,17 @@ bool SettingsLoader::XmlNodeBegin(void)
 		std::string parentTagName;
 		if(GetCurrentParentTag(parentTagName))
 		{
-			if(m_CurrentItem != nullptr)
-				m_ParentItem = m_CurrentItem;
+			auto parentBranchItem = m_currTreeBranch.find(parentTagName);
+			if(parentBranchItem != m_currTreeBranch.end())
+			{
+				m_ParentItem = parentBranchItem->second;
+			}
 		}
 		else
 		{
 			m_ParentItem = nullptr;
 			m_RootItem = nullptr;
+			m_currTreeBranch.clear();
 		}
 
 		QObject* newItem;
@@ -88,14 +92,11 @@ bool SettingsLoader::XmlNodeBegin(void)
 		if(m_RootItem == nullptr)
 		{
 			m_ParentItem = newItem;
-			m_CurrentItem = newItem;
 			m_RootItem = newItem;
 			m_SourceModel.addItem(m_ParentItem, QModelIndex());
 		}
-		else
-		{
-			m_CurrentItem = newItem;
-		}
+		m_CurrentItem = newItem;
+		m_currTreeBranch[currTagName] = newItem;
 	}
 	return true;
 }
@@ -115,7 +116,6 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 		}
 		else
 			qDebug() << "can not find tag: " << currTagName.data();
-		m_CurrentItem = nullptr;
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{

@@ -30,7 +30,7 @@ private:
 	TagsInfoLoader m_TagsInfoLoader;
 	std::list<std::shared_ptr<BaseSetting>> m_Settings;
 	SettingsModel& m_SourceModel;
-	std::vector<QObject*> m_currTreeBranch;
+	std::map<std::string, QObject*> m_currTreeBranch;
 	QObject* m_CurrentItem;
 	QObject* m_ParentItem;
 	QObject* m_RootItem;
