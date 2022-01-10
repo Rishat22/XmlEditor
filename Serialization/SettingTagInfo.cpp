@@ -82,13 +82,20 @@ void SettingTagInfo::SetData(const std::string& strTag, const std::string& strDa
 	}
 }
 
+void SettingTagInfo::SetData(const std::string& strData)
+{
+	QVariant newData(QString::fromStdString(strData));
+	newData.convert(m_Type);
+	m_Data = newData;
+}
+
 void SettingTagInfo::SetType(const std::string& strType)
 {
-	m_Type = strType;
 	const auto typeIt = StrNotationOfTypesList.find(strType);
 	if(typeIt != StrNotationOfTypesList.end())
 	{
 		m_Data = typeIt->second;
+		m_Type = m_Data.type();
 	}
 }
 

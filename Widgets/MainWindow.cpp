@@ -17,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
 
+	connect(&m_SourceModel, &SettingsModel::rowsInserted, this, [](const QModelIndex &parent, int first, int last)
+	{
+		qDebug() << "QModelIndex: " <<parent.row() << parent.column();
+		qDebug() << "First and last: " << first << last;
+
+	});
 	m_TreeView->setModel(&m_FilterDataModel);
 	SetStyleSheet();
 	m_MainLayout->addWidget(m_TreeView);

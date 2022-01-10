@@ -18,10 +18,10 @@ void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
 
 void SettingsModel::updateItem(QObject* item, const SettingTagInfo& tagInfo)
 {
-	const auto& tagValue = tagInfo.GetData();
+	auto tagValue = tagInfo.GetData();
 	item->setProperty("Type", tagValue.typeName());
 	item->setProperty("Value", tagValue);
-//	item->SetToolTip(currTagName, newTagInfo.GetDesctription());
+//	item->setToolTip(currTagName, newTagInfo.GetDesctription());
 }
 
 QObject *SettingsModel::objByIndex(const QModelIndex &index) const

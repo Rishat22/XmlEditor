@@ -38,6 +38,8 @@ public:
 	/* Settings Loading */
 	void loadSettings(const std::string& strFileName);
 	void saveSettings(const std::string& strFileName);
+signals:
+	void setCustomEditingView(const QModelIndex& index, const QVariant::Type type);
 protected:
     //Convenient method to retrieve item object from index
     QObject* objByIndex(const QModelIndex &index) const;

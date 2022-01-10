@@ -14,6 +14,7 @@ public:
     QVariant GetData() const;
     std::string GetDescription() const;
 	void SetData(const std::string& strTag, const std::string& strData);
+	void SetData(const std::string& strData);
 private:
 	void SetName(const std::string& strName);
     void SetType(const std::string& strType);
@@ -21,7 +22,7 @@ private:
     void SetDescription(const std::string& settingDescr);
 private:
 	std::string m_Name;
-	std::string m_Type;
+	QVariant::Type m_Type;
     QVariant m_Data;
 	QStringList m_PossibleValues;
 	std::string m_SettingDescription;

@@ -8,9 +8,9 @@ namespace Serialization
 SettingsLoader::SettingsLoader(SettingsModel& model)
 	: CXmlHandler()
 	, m_SourceModel(model)
+	, m_CurrentItem("", nullptr)
+	, m_ParentItem("", nullptr)
 	, m_RootItem(nullptr)
-	, m_ParentItem(nullptr)
-	, m_CurrentItem(nullptr)
 {
 }
 
@@ -41,11 +41,6 @@ bool SettingsLoader::LoadTagsInfo(const std::string& strFileName)
 	}
 }
 
-//std::shared_ptr<BaseSetting> SettingsLoader::CreateSettings()
-//{
-
-//}
-
 bool SettingsLoader::Save(const std::string& strFileName)
 {
 	/*CXmlNode* document = */NewDocument(strFileName);
@@ -66,24 +61,41 @@ bool SettingsLoader::XmlNodeBegin(void)
 	std::string currTagName;
 	if(GetCurrentTag(currTagName))
 	{
-		QObject* newItem = (m_ParentItem == nullptr) ? new QObject() : new QObject(m_ParentItem);
+		std::string parentTagName;
+		if(GetCurrentParentTag(parentTagName))
+		{
+			m_ParentItem = m_CurrentItem;
+		}
+		else
+		{
+			m_ParentItem.second = nullptr;
+			m_RootItem = nullptr;
+		}
+
+		QObject* newItem;
+		if(m_RootItem == nullptr)
+		{
+			newItem = new QObject();
+		}
+		else
+		{
+			newItem = (m_ParentItem.second == nullptr) ? new QObject(m_RootItem) : new QObject(m_ParentItem.second);
+		}
+
 		newItem->setObjectName(currTagName.data());
 		newItem->setProperty("TagName", currTagName.data());
-		if(m_ParentItem == nullptr)
+		if(m_RootItem == nullptr)
 		{
-			m_ParentItem = newItem;
+			m_ParentItem.second = newItem;
+			m_CurrentItem.second = newItem;
 			m_RootItem = newItem;
-			m_SourceModel.addItem(m_ParentItem, QModelIndex());
+			m_SourceModel.addItem(m_ParentItem.second, QModelIndex());
 		}
-		m_CurrentItem = newItem;
-//		else
-//		{
-//			m_ParentItem->objectName()
-//		}
-//		QObject* item2 = new QObject(item1);
-//		item2->setProperty("TagName", "Son");
-		//Adds entire item1 branch
-		/* ---------------------------------------*/
+		else
+		{
+			m_ParentItem = m_CurrentItem;
+			m_CurrentItem.second = newItem;
+		}
 	}
 	return true;
 }
@@ -94,21 +106,15 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 
 	try
 	{
-//		std::string currTagName;
-//		if(GetCurrentTag(currTagName))
-//		{
-//			auto currentTagInfo = CreateSettings();
-//			m_ParentItem->setProperty("Type", "String");
-//			m_ParentItem->setProperty("Value", strNodeValue.data());
-//			curAddedSetting->SetData(currTagName, strNodeValue);
-//		}
-
 		std::string currTagName;
 		SettingTagInfo tagInfo;
 		if(GetCurrentTag(currTagName) && m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo))
 		{
-			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
+			tagInfo.SetData(strNodeValue);
+			m_SourceModel.updateItem(m_CurrentItem.second, tagInfo);
 		}
+		else qDebug() << "can not find tag: " << currTagName.data();
+		m_CurrentItem.second = nullptr;
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{
@@ -124,12 +130,29 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 	return bRes;
 }
 
+bool SettingsLoader::GetCurrentParentTag(std::string& tagName)
+{
+	auto emptyIt = std::find(m_vStrOfNodes.begin(), m_vStrOfNodes.end(), std::string());
+	emptyIt--; //Last not empty
+	emptyIt--; //Parent of this
+	if(emptyIt >= m_vStrOfNodes.begin() && emptyIt != m_vStrOfNodes.end())
+	{
+		tagName = *emptyIt;
+		return true;
+	}
+	return false;
+}
+
 bool SettingsLoader::GetCurrentTag(std::string& tagName)
 {
 	auto emptyIt = std::find(m_vStrOfNodes.begin(), m_vStrOfNodes.end(), std::string());
 	emptyIt--; //Last not empty
-	tagName = *emptyIt;
-	return emptyIt >= m_vStrOfNodes.begin() && emptyIt != m_vStrOfNodes.end();
+	if(emptyIt >= m_vStrOfNodes.begin() && emptyIt != m_vStrOfNodes.end())
+	{
+		tagName = *emptyIt;
+		return true;
+	}
+	return false;
 }
 
 

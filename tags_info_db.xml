@@ -3,7 +3,7 @@
 	<!-- settings file name -->
 	<example>
 		<Tag>
-			<Name>MainWidget</Name>
+			<Name>NameWidget</Name>
 			<Type>String</Type>
 			<Description>
 				Set the Name for the main window. 

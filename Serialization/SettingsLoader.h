@@ -19,20 +19,21 @@ public:
 	bool Save(const std::string& strFileName);
 	std::list<std::shared_ptr<BaseSetting> > Load(const std::string& strFileName);
 
-//	std::shared_ptr<BaseSetting> CreateSettings();
 	bool XmlNodeBegin(void) override;
 	bool XmlNodeDecode(const std::string& strNodeValue) override;
 
 private:
 	bool LoadTagsInfo(const std::string& strFileName);
+	bool GetCurrentParentTag(std::string& tagName);
 	bool GetCurrentTag(std::string& tagName);
 private:
 	TagsInfoLoader m_TagsInfoLoader;
 	std::list<std::shared_ptr<BaseSetting>> m_Settings;
 	SettingsModel& m_SourceModel;
+	std::vector<QObject*> m_currTreeBranch;
+	std::pair<std::string, QObject*> m_CurrentItem;
+	std::pair<std::string, QObject*> m_ParentItem;
 	QObject* m_RootItem;
-	QObject* m_ParentItem;
-	QObject* m_CurrentItem;
 
 };
 
