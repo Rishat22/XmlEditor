@@ -19,8 +19,8 @@ void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
 void SettingsModel::updateItem(QObject* item, const SettingTagInfo& tagInfo)
 {
 	auto tagValue = tagInfo.GetData();
-	item->setProperty("Type", tagValue.typeName());
-	item->setProperty("Value", tagValue);
+	item->setProperty(m_NameColumns.at(SettingsColumnsType::Type).toUtf8(), tagValue.typeName());
+	item->setProperty(m_NameColumns.at(SettingsColumnsType::Value).toUtf8(), tagValue);
 //	item->setToolTip(currTagName, newTagInfo.GetDesctription());
 }
 
@@ -102,7 +102,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
 		}
 	case Qt::TextAlignmentRole:
-		return Qt::AlignCenter;
+		return (index.column() == SettingsColumnsType::TagName) ? Qt::AlignLeft : Qt::AlignCenter;
 	default:
 		return QVariant();
 	}
@@ -113,7 +113,6 @@ bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int
 {
 	if(role != Qt::EditRole)
 		return false;
-
 	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
 }
 
