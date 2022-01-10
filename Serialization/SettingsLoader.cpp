@@ -8,8 +8,8 @@ namespace Serialization
 SettingsLoader::SettingsLoader(SettingsModel& model)
 	: CXmlHandler()
 	, m_SourceModel(model)
-	, m_CurrentItem("", nullptr)
-	, m_ParentItem("", nullptr)
+	, m_CurrentItem(nullptr)
+	, m_ParentItem(nullptr)
 	, m_RootItem(nullptr)
 {
 }
@@ -64,11 +64,12 @@ bool SettingsLoader::XmlNodeBegin(void)
 		std::string parentTagName;
 		if(GetCurrentParentTag(parentTagName))
 		{
-			m_ParentItem = m_CurrentItem;
+			if(m_CurrentItem != nullptr)
+				m_ParentItem = m_CurrentItem;
 		}
 		else
 		{
-			m_ParentItem.second = nullptr;
+			m_ParentItem = nullptr;
 			m_RootItem = nullptr;
 		}
 
@@ -79,22 +80,21 @@ bool SettingsLoader::XmlNodeBegin(void)
 		}
 		else
 		{
-			newItem = (m_ParentItem.second == nullptr) ? new QObject(m_RootItem) : new QObject(m_ParentItem.second);
+			newItem = (m_ParentItem == nullptr) ? new QObject(m_RootItem) : new QObject(m_ParentItem);
 		}
 
 		newItem->setObjectName(currTagName.data());
 		newItem->setProperty("TagName", currTagName.data());
 		if(m_RootItem == nullptr)
 		{
-			m_ParentItem.second = newItem;
-			m_CurrentItem.second = newItem;
+			m_ParentItem = newItem;
+			m_CurrentItem = newItem;
 			m_RootItem = newItem;
-			m_SourceModel.addItem(m_ParentItem.second, QModelIndex());
+			m_SourceModel.addItem(m_ParentItem, QModelIndex());
 		}
 		else
 		{
-			m_ParentItem = m_CurrentItem;
-			m_CurrentItem.second = newItem;
+			m_CurrentItem = newItem;
 		}
 	}
 	return true;
@@ -111,10 +111,11 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 		if(GetCurrentTag(currTagName) && m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo))
 		{
 			tagInfo.SetData(strNodeValue);
-			m_SourceModel.updateItem(m_CurrentItem.second, tagInfo);
+			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
 		}
-		else qDebug() << "can not find tag: " << currTagName.data();
-		m_CurrentItem.second = nullptr;
+		else
+			qDebug() << "can not find tag: " << currTagName.data();
+		m_CurrentItem = nullptr;
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{

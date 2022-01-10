@@ -31,8 +31,8 @@ private:
 	std::list<std::shared_ptr<BaseSetting>> m_Settings;
 	SettingsModel& m_SourceModel;
 	std::vector<QObject*> m_currTreeBranch;
-	std::pair<std::string, QObject*> m_CurrentItem;
-	std::pair<std::string, QObject*> m_ParentItem;
+	QObject* m_CurrentItem;
+	QObject* m_ParentItem;
 	QObject* m_RootItem;
 
 };
