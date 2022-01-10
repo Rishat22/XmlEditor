@@ -58,9 +58,8 @@ int SettingsModel::rowCount(const QModelIndex &parent) const
 	return objByIndex(parent)->children().count();
 }
 
-int SettingsModel::columnCount(const QModelIndex &parent) const
+int SettingsModel::columnCount(const QModelIndex& /*parent*/) const
 {
-	Q_UNUSED(parent)
 	return m_NameColumns.count();
 }
 
@@ -72,7 +71,8 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 		return Qt::NoItemFlags;
 	}
 	auto itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-	if(static_cast<SettingsColumnsType>(index.column()) == SettingsColumnsType::Value)
+	if(static_cast<SettingsColumnsType>(index.column()) == SettingsColumnsType::Value
+			&& objByIndex(index)->property(m_NameColumns.at(SettingsColumnsType::Value).toUtf8()).isValid())
 		return itemFlags | Qt::ItemIsEditable;
 
 	return itemFlags;

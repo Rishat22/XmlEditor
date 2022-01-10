@@ -7,7 +7,7 @@
 using namespace Serialization;
 
 /* ToDo It can put all the functionality with columns in a separate class */
-enum class SettingsColumnsType
+enum SettingsColumnsType
 {
 	TagName = 0,
 	Type,

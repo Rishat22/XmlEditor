@@ -93,6 +93,7 @@ void MainWindow::loadData(const std::string& strFileName)
 		return;
 	m_SourceModel.loadSettings(strFileName);
 	m_TreeView->expandAll();
+	m_TreeView->resizeColumnToContents(SettingsColumnsType::TagName);
 }
 
 void MainWindow::saveData(const std::string& strFileName)
