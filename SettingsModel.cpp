@@ -95,7 +95,12 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	switch (role) {
 	case Qt::DisplayRole:
 		{
-			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+			auto value = objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+			if(index.column() == SettingsColumnsType::Value && value.type() == QVariant::StringList)
+			{
+				return (value.toStringList().empty()) ? QString() : value.toStringList().first();
+			}
+			return value;
 		}
 	case Qt::EditRole:
 		{
