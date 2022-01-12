@@ -14,8 +14,6 @@ public:
 signals:
 public slots:
 private:
-    QWidget* createListEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setListEditorData(QWidget *editor, const QModelIndex &index) const;
     void setListModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 };
 

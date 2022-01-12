@@ -1,6 +1,7 @@
 #include "GeneralItemsDelegate.h"
 #include <QModelIndex>
 #include <QComboBox>
+#include <QColorDialog>
 
 GeneralItemsDelegate::GeneralItemsDelegate(QObject *parent)
 	: QItemDelegate(parent)
@@ -13,49 +14,72 @@ QWidget* GeneralItemsDelegate::createEditor(QWidget* parent,
 	const QModelIndex& index) const
 {
 	auto value = index.model()->data(index, Qt::EditRole);
-	if(value.type() == QVariant::StringList)
+	switch (value.type())
 	{
-		createListEditor(parent, option, index);
+		case QVariant::StringList :
+		{
+			auto editor = new QComboBox(parent);
+			editor->setFrame(false);
+			return editor;
+		}
+		case QVariant::Color :
+		{
+			auto ColorDialog = new QColorDialog(parent);
+			ColorDialog->setOption(QColorDialog::ShowAlphaChannel, true);
+			ColorDialog->setOption(QColorDialog::DontUseNativeDialog, true);
+			return ColorDialog;
+		}
+		default:
+			return QItemDelegate::createEditor(parent, option, index);
 	}
 	return QItemDelegate::createEditor(parent, option, index);
-}
-
-QWidget* GeneralItemsDelegate::createListEditor(QWidget* parent,
-											const QStyleOptionViewItem& /*option*/ ,
-											const QModelIndex& /*index*/) const
-{
-	auto editor = new QComboBox(parent);
-	editor->setFrame(false);
-	return editor;
 }
 
 void GeneralItemsDelegate::setEditorData(QWidget *editor,
                                     const QModelIndex &index) const
 {
 	auto value = index.model()->data(index, Qt::EditRole);
-	if(value.type() == QVariant::StringList)
+	switch (value.type())
 	{
-		setListEditorData(editor, index);
+		case QVariant::StringList :
+		{
+			auto value = index.model()->data(index, Qt::EditRole);
+			auto comboBox = static_cast<QComboBox*>(editor);
+			comboBox->addItems(value.toStringList());
+			return;
+		}
+		case QVariant::Color :
+		{
+			auto value = index.model()->data(index, Qt::EditRole);
+			auto colorEditor = static_cast<QColorDialog*>(editor);
+			colorEditor->setCurrentColor(value.value<QColor>());
+			return;
+		}
+		default:
+			QItemDelegate::setEditorData(editor, index);
 	}
 	QItemDelegate::setEditorData(editor, index);
-}
-
-void GeneralItemsDelegate::setListEditorData(QWidget *editor,
-										 const QModelIndex &index) const
-{
-	auto value = index.model()->data(index, Qt::EditRole);
-	auto comboBox = static_cast<QComboBox*>(editor);
-	comboBox->addItems(value.toStringList());
 }
 
 void GeneralItemsDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
 								   const QModelIndex& index) const
 {
 	auto value = index.model()->data(index, Qt::EditRole);
-	if(value.type() == QVariant::StringList)
+	switch (value.type())
 	{
-		setListModelData(editor, model, index);
-		return;
+		case QVariant::StringList :
+		{
+			return setListModelData(editor, model, index);
+		}
+		case QVariant::Color :
+		{
+			auto colorEditor = static_cast<QColorDialog*>(editor);
+			const QColor& currentColor = colorEditor->currentColor();
+			model->setData(index, currentColor, Qt::EditRole);
+			return;
+		}
+		default:
+			return QItemDelegate::setModelData(editor, model, index);
 	}
 	QItemDelegate::setModelData(editor, model, index);
 }

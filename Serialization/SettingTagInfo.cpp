@@ -84,18 +84,42 @@ void SettingTagInfo::SetData(const std::string& strTag, const std::string& strDa
 
 void SettingTagInfo::SetData(const std::string& strData)
 {
-	if(m_Type == QVariant::StringList)
+	switch (m_Type)
 	{
-		auto newListData = m_Data.toStringList();
-		auto firstElement = newListData.begin();
-		auto curElement = std::find(newListData.begin(), newListData.end(), strData.data());
-		std::swap(*firstElement, *curElement);
-		m_Data = newListData;
-		return;
+		case QVariant::StringList :
+		{
+			auto newListData = m_Data.toStringList();
+			auto firstElement = newListData.begin();
+			auto curElement = std::find(newListData.begin(), newListData.end(), strData.data());
+			std::swap(*firstElement, *curElement);
+			m_Data = newListData;
+			break;
+		}
+		case QVariant::Color :
+		{
+			std::string strR, strG, strB, strA;
+			size_t t1, t2, t3;
+			t1 =  strData.find(" ", 0); /* First space */
+			t2 =  strData.find(" ", t1 + 1); /* Second space */
+			t3 =  strData.find(" ", t2 + 1); /* Third space */
+
+			strR =  strData.substr(0, t1);
+			strG =  strData.substr(t1 + 1, t2 - t1 -1);
+			strB =  strData.substr(t2 + 1, t3 - t2 -1);
+			strA =  strData.substr(t3 + 1,  strData.length() - t3 - 1);
+
+			m_Data = QColor(static_cast<int>(atoi(strR.data())), static_cast<int>(atoi(strG.data())),
+							static_cast<int>(atoi(strB.data())), static_cast<int>(atoi(strA.data())));
+			return;
+		}
+		default:
+		{
+			QVariant newData(QString::fromStdString(strData));
+			newData.convert(m_Type);
+			m_Data = newData;
+			break;
+		}
 	}
-	QVariant newData(QString::fromStdString(strData));
-	newData.convert(m_Type);
-	m_Data = newData;
 }
 
 void SettingTagInfo::SetType(const std::string& strType)
