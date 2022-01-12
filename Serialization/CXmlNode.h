@@ -50,7 +50,6 @@ public:
 	bool SetValue(u_char u8Value);
 	bool SetValue(char s8Value);
 	bool SetValue(u_int32_t u32Value);
-	bool SetValueHex(u_int32_t u32Value);
 	bool SetValue(int s32Value);
 	bool SetValue(ulong u64Value);
 	bool SetValue(double f64Value);

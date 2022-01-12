@@ -602,42 +602,6 @@ bool CXmlNode::SetValue(u_int32_t u32Value)
  *******************************************************************************
  *
  *   \par Name:		
- *              bool SetValueHex(u_int32_t u32Value) \n
- *
- *   \par Purpose:
- * 				Sets value of the node in hex form (17 will be written as 11) \n
- *
- *   \par Inputs:     
- * 				u_int32_t u32Value - value \n
- *
- *   \par Outputs:    
- * 				None \n
- *
- *   \par Returns:    
- * 				true if success, false if fails \n
- *
- *   \par Notes:      
- * 				None \n
- *
- *******************************************************************************
- */
-bool CXmlNode::SetValueHex(u_int32_t u32Value)
-{
-	char s[256];
-	sprintf(s, "%X", u32Value);
-	if(m_pxml_node != nullptr)
-	{
-		m_pxml_node->append_child(pugi::node_pcdata).set_value(s);
-		return true;
-	}
-	
-	return false;
-}
-
-/**
- *******************************************************************************
- *
- *   \par Name:		
  *              bool SetValue(int s32Value) \n
  *
  *   \par Purpose:
