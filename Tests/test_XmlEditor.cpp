@@ -33,7 +33,7 @@ bool UnitTestUSerialization(void)
 	CTestSerialization T1, T2;
 
 	/* Step 13: In function UnitTestUSerialization specify your strFileName. */
-	std::string strFileName ="/TestUSerialization.xml";
+	std::string strFileName ="./TestUSerialization.xml";
 
 	/* Clear T1 and T2 */
 	T1.Clear();

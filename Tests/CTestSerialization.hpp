@@ -336,7 +336,7 @@ bool CTestSerialization::XmlNodeDecode(const std::string& strNodeValue)
         }
         if(m_vStrOfNodes[1] == "QNHFlag")
         {
-            m_bQNHFlag = (strNodeValue == "TRUE") ? true : false;
+			m_bQNHFlag = (strNodeValue == "true") ? true : false;
         }
         if(m_vStrOfNodes[1] == "Country")
         {
