@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QPlainTextEdit>
 #include <QDir>
 #include "WdgSearch.h"
 #include "MainWindow.h"
@@ -9,28 +10,33 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, m_MainLayout(new QVBoxLayout)
-	, m_TreeView(new QTreeView)
-	, m_WdgSearch(new WdgSearch)
+	, m_MainLayout(new QVBoxLayout())
+	, m_SettingsView(new SettingsTreeView(this))
+	, m_TagDescriptionView(new QPlainTextEdit(this))
+	, m_WdgSearch(new WdgSearch(this))
 	, m_lasSelectedPath(QString())
 {
 	setObjectName("MainWindow");
 
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
+	m_SettingsView->setModel(&m_FilterDataModel);
+	m_MainLayout->addWidget(m_SettingsView);
+	m_MainLayout->setStretch(0, 6);
 
-	m_TreeView->setModel(&m_FilterDataModel);
-	SetStyleSheet();
-	m_MainLayout->addWidget(m_TreeView);
+	m_TagDescriptionView->setReadOnly(true);
+	connect(m_SettingsView, &SettingsTreeView::showDescription, this, &MainWindow::SetDescriptionText);
+	m_MainLayout->addWidget(m_TagDescriptionView);
+
 	m_MainLayout->addStretch();
-	m_MainLayout->addWidget(m_WdgSearch);
 	connect(m_WdgSearch, &WdgSearch::TextSearch, this, &MainWindow::BtnSearchClicked);
+	m_MainLayout->addWidget(m_WdgSearch);
 	m_MainLayout->setStretch(0, 1); //Set Priorities to resize TreeView
-	SetStyleSheet();
 
 	auto mainWidget = new QWidget;
 	mainWidget->setLayout(m_MainLayout);
 	setCentralWidget(mainWidget);
 
+	SetStyleSheet();
 	AddMenuBar();
 	resize(1000, 600);
 }
@@ -88,14 +94,19 @@ QList<QAction*> MainWindow::CreateFileActions()
 	return fileActions;
 }
 
+void MainWindow::SetDescriptionText(const QString& descriptionText)
+{
+	m_TagDescriptionView->setPlainText(descriptionText);
+}
+
 void MainWindow::loadData(const std::string& strFileName)
 {
 	if(strFileName.empty())
 		return;
 	m_SourceModel.loadSettings(strFileName);
-	m_TreeView->expandAll();
-	m_TreeView->resizeColumnToContents(SettingsColumnsType::TagName);
-	m_TreeView->setItemDelegate(new GeneralItemsDelegate(m_TreeView));
+	m_SettingsView->expandAll();
+	m_SettingsView->resizeColumnToContents(SettingsColumnsType::TagName);
+	m_SettingsView->setItemDelegate(new GeneralItemsDelegate(m_SettingsView));
 }
 
 void MainWindow::saveData(const std::string& strFileName)
@@ -107,12 +118,12 @@ void MainWindow::saveData(const std::string& strFileName)
 
 MainWindow::~MainWindow()
 {
-	delete m_TreeView;
+	delete m_SettingsView;
 }
 
 void MainWindow::SetStyleSheet()
 {
-	m_TreeView->setStyleSheet('#' + m_TreeView->objectName() + "{background-color: rgb(128, 128, 128);}");
+	m_SettingsView->setStyleSheet('#' + m_SettingsView->objectName() + "{background-color: rgb(128, 128, 128);}");
 
 	QString styleObj = '#' + this->objectName() + "{background-color: rgb(128, 128, 128);}";
 	setStyleSheet(styleObj);

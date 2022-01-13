@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "StableDeclaration.h"
+#include "SettingsTreeView.h"
 #include "SettingsModel.h"
 #include "FilterDataModel.h"
 
@@ -19,6 +20,7 @@ public:
     ~MainWindow();
 
 private slots:
+	void SetDescriptionText(const QString& descriptionText);
     void BtnSearchClicked(const QString& text);
     void saveData(const std::string& strFileName);
     void loadData(const std::string& strFileName);
@@ -28,8 +30,9 @@ private:
     QList<QAction*> CreateFileActions();
 private:
     QVBoxLayout* m_MainLayout;
-    QTreeView* m_TreeView;
-    WdgSearch* m_WdgSearch;
+	SettingsTreeView* m_SettingsView;
+	QPlainTextEdit* m_TagDescriptionView;
+	WdgSearch* m_WdgSearch;
 	SettingsModel m_SourceModel;
     FilterDataModel m_FilterDataModel;
     QString m_lasSelectedPath;

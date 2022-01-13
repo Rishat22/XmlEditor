@@ -6,8 +6,8 @@
 			<Name>NameWidget</Name>
 			<Type>String</Type>
 			<Description>
-				Set the Name for the main window. 
-				This changes the text in the header of the main window.
+Set the Name for the main window. 
+This changes the text in the header of the main window.
 			</Description>
 		</Tag>
 		<Tag>
@@ -21,8 +21,9 @@
 			<Type>List</Type>
 			<Values>Fixed,Expanded,FixedHeight</Values>
 			<Description>
-				Set the resize type of main window. 
-				Allows you to choose a fixed window size or a fixed height only.
+Values: Fixed,Expanded,FixedHeight;
+Set the resize type of main window. 
+Allows you to choose a fixed window size or a fixed height only.
 			</Description>
 		</Tag>
 		<Tag>
@@ -42,8 +43,8 @@
 			<Name>MainWidget</Name>
 			<Type>String</Type>
 			<Description>
-				Set the Name for the main window. 
-				This changes the text in the header of the main window.
+Set the Name for the main window. 
+This changes the text in the header of the main window.
 			</Description>
 		</Tag>
 		<Tag>
@@ -51,8 +52,8 @@
 			<Type>List</Type>
 			<Values>Fixed,Expanded,FixedHeight</Values>
 			<Description>
-				Set the resize type of main window. 
-				Allows you to choose a fixed window size or a fixed height only.
+Set the resize type of main window. 
+Allows you to choose a fixed window size or a fixed height only.
 			</Description>
 		</Tag>
 		<Tag>
