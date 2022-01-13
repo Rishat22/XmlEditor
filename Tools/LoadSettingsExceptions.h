@@ -40,15 +40,15 @@ struct UnknownSettingsException : LoadSettingsException
 	}
 };
 
-struct IncorrectTagValueList  : LoadSettingsException
+struct IncorrectTagListValue  : LoadSettingsException
 {
-    IncorrectTagValueList()
+	IncorrectTagListValue()
     {
         std::stringstream ss;
         ss << "Incorrect tag value list \n";
         m_msg = ss.str();
     }
-    IncorrectTagValueList(const QStringList& possibleArgs)
+	IncorrectTagListValue(const QStringList& possibleArgs)
     {
         std::stringstream ss;
         ss << "Incorrect tag value list \n";
@@ -63,6 +63,22 @@ struct IncorrectTagValueList  : LoadSettingsException
     }
 private:
         std::string m_msg;
+};
+
+struct IncorrectTagColorValue : LoadSettingsException
+{
+	IncorrectTagColorValue(const std::string& strColor)
+		: m_msg(std::string("It is not possible to convert this string to color: "
+							+ strColor + '\n'))
+	{
+	}
+
+	const char* what() const throw () override
+	{
+		return m_msg.c_str();
+	}
+private:
+	std::string m_msg;
 };
 
 }

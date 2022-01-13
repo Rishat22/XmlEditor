@@ -1,6 +1,7 @@
 #include <QColor>
 #include "SettingTagInfo.h"
 #include "Tools/MathFunc.h"
+#include <Tools/LoadSettingsExceptions.h>
 
 namespace Serialization
 {
@@ -91,6 +92,10 @@ void SettingTagInfo::SetData(const std::string& strData)
 			auto newListData = m_Data.toStringList();
 			auto firstElement = newListData.begin();
 			auto curElement = std::find(newListData.begin(), newListData.end(), strData.data());
+			if(curElement == newListData.end())
+			{
+				throw Tools::IncorrectTagListValue(newListData);
+			}
 			std::swap(*firstElement, *curElement);
 			m_Data = newListData;
 			break;
@@ -102,7 +107,10 @@ void SettingTagInfo::SetData(const std::string& strData)
 			t1 =  strData.find(" ", 0); /* First space */
 			t2 =  strData.find(" ", t1 + 1); /* Second space */
 			t3 =  strData.find(" ", t2 + 1); /* Third space */
-
+			if(t1 == std::string::npos || t2 == std::string::npos || t3 == std::string::npos)
+			{
+				throw Tools::IncorrectTagColorValue(strData);
+			}
 			strR =  strData.substr(0, t1);
 			strG =  strData.substr(t1 + 1, t2 - t1 -1);
 			strB =  strData.substr(t2 + 1, t3 - t2 -1);
