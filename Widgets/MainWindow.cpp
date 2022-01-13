@@ -21,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
 	m_SettingsView->setModel(&m_FilterDataModel);
 	m_MainLayout->addWidget(m_SettingsView);
-	m_MainLayout->setStretch(0, 6);
 
 	m_TagDescriptionView->setReadOnly(true);
 	connect(m_SettingsView, &SettingsTreeView::showDescription, this, &MainWindow::SetDescriptionText);

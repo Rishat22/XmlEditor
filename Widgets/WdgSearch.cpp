@@ -19,6 +19,7 @@ WdgSearch::WdgSearch(QWidget *parent)
 	}
 	);
 
+	m_MainLayout->setContentsMargins(0, 0, 0, 0);
 	SetStyleSheet();
 	setLayout(m_MainLayout);
 }
