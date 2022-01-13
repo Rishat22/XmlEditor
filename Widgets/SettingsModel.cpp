@@ -118,27 +118,10 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	return QVariant();
 }
 
-void SettingsModel::iterate(const QModelIndex & index, const QAbstractItemModel * model)
-{
-	 if (index.isValid())
-		  qDebug() << objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
-	 if (!model->hasChildren(index) || (index.flags() & Qt::ItemNeverHasChildren))
-	 {
-		  return;
-	 }
-	 auto rows = model->rowCount(index);
-	 for (int i = 0; i < rows; ++i)
-		 iterate(model->index(i, 0, index), model);
-}
-
 bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
 	if(role != Qt::EditRole)
 		return false;
-
-	qDebug() << index.row() << index.column();
-	qDebug() << "QVariant: " << value.typeName();
-	iterate(index, this);
 	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
 }
 
