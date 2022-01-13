@@ -13,6 +13,8 @@ signals:
 
 private slots:
     void objectClicked(const QModelIndex &index);
+private:
+    void SetStyleSheet();
 };
 
 #endif // SETTINGSTREEVIEW_H

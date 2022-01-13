@@ -123,6 +123,10 @@ void SettingTagInfo::SetData(const std::string& strData)
 		default:
 		{
 			QVariant newData(QString::fromStdString(strData));
+			if(newData.canConvert(m_Type) == false)
+			{
+				throw Tools::UnknownSettingsException();
+			}
 			newData.convert(m_Type);
 			m_Data = newData;
 			break;

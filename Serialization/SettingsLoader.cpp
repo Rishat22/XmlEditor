@@ -128,6 +128,12 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 		exception.what();
 		bRes = false;
 	}
+	catch (...)
+	{
+		std::cout << "Unknown problem when loading" << std::endl;
+		bRes = false;
+	}
+
 	return bRes;
 }
 

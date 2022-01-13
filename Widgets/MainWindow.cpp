@@ -122,10 +122,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::SetStyleSheet()
 {
-	m_SettingsView->setStyleSheet('#' + m_SettingsView->objectName() + "{background-color: rgb(128, 128, 128);}");
-
 	QString styleObj = '#' + this->objectName() + "{background-color: rgb(128, 128, 128);}";
 	setStyleSheet(styleObj);
+	/* ToDo temp hard-code style */
+	m_TagDescriptionView->setStyleSheet("QPlainTextEdit, QTextEdit{font-style: normal;font-size: 12pt;font-family: \"Liberation Mono\";\
+padding: 3px;border: 1px solid rgba(255, 255, 255, 255);\
+background: rgba(045, 045, 045, 255);alternate-background-color: rgba(070, 070, 070, 255);\
+color: rgba(255, 255, 255, 255);}");
 }
 
 void MainWindow::BtnSearchClicked(const QString& text)
