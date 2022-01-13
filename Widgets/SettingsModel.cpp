@@ -107,6 +107,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
 		}
 		case Qt::UserRole:
+		case Qt::ToolTipRole:
 		{
 			return objByIndex(index)->property(descriptionPropertyName.data());
 		}
