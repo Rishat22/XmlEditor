@@ -21,7 +21,7 @@ void SettingsModel::updateItem(QObject* item, const SettingTagInfo& tagInfo)
 	auto tagValue = tagInfo.GetData();
 	item->setProperty(m_NameColumns.at(SettingsColumnsType::Type).toUtf8(), tagValue.typeName());
 	item->setProperty(m_NameColumns.at(SettingsColumnsType::Value).toUtf8(), tagValue);
-//	item->setToolTip(currTagName, newTagInfo.GetDesctription());
+	item->setProperty(descriptionPropertyName.data(), tagInfo.GetDescription().data());
 }
 
 QObject *SettingsModel::objByIndex(const QModelIndex &index) const
@@ -93,7 +93,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 	//Cell values retrieved from QObject properties
 	switch (role) {
-	case Qt::DisplayRole:
+		case Qt::DisplayRole:
 		{
 			auto value = objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
 			if(index.column() == SettingsColumnsType::Value && value.type() == QVariant::StringList)
@@ -102,22 +102,43 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 			}
 			return value;
 		}
-	case Qt::EditRole:
+		case Qt::EditRole:
 		{
 			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
 		}
-	case Qt::TextAlignmentRole:
-		return (index.column() == SettingsColumnsType::TagName) ? Qt::AlignLeft : Qt::AlignCenter;
-	default:
-		return QVariant();
+		case Qt::UserRole:
+		{
+			return objByIndex(index)->property(descriptionPropertyName.data());
+		}
+		case Qt::TextAlignmentRole:
+			return (index.column() == SettingsColumnsType::TagName) ? Qt::AlignLeft : Qt::AlignCenter;
+		default:
+			return QVariant();
 	}
 	return QVariant();
+}
+
+void SettingsModel::iterate(const QModelIndex & index, const QAbstractItemModel * model)
+{
+	 if (index.isValid())
+		  qDebug() << objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+	 if (!model->hasChildren(index) || (index.flags() & Qt::ItemNeverHasChildren))
+	 {
+		  return;
+	 }
+	 auto rows = model->rowCount(index);
+	 for (int i = 0; i < rows; ++i)
+		 iterate(model->index(i, 0, index), model);
 }
 
 bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
 	if(role != Qt::EditRole)
 		return false;
+
+	qDebug() << index.row() << index.column();
+	qDebug() << "QVariant: " << value.typeName();
+	iterate(index, this);
 	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
 }
 

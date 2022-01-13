@@ -4,6 +4,8 @@
 #include <QAbstractItemModel>
 #include "Serialization/SettingsLoader.h"
 
+const std::string descriptionPropertyName = "Description";
+
 using namespace Serialization;
 
 /* ToDo It can put all the functionality with columns in a separate class */
@@ -49,5 +51,8 @@ protected:
     //Virtual root item used to store the list of root content items
     QObject* m_RootItem;
 	SettingsLoader m_SettingsLoader;
+
+private:
+	void iterate(const QModelIndex & index, const QAbstractItemModel * model);
 };
 #endif // SETTINGSMODEL_H

@@ -35,11 +35,6 @@ file(GLOB HRDS
     Serialization/pugi/*.hpp
 )
 file(GLOB SRCS
-    FilterDataModel.cpp
-    TableModel.cpp
-    SettingsModel.cpp
-    GeneralItemsDelegate.cpp
-    MathFunc.cpp
     Tools/*.cpp
     Widgets/*.cpp
     Serialization/*.cpp
