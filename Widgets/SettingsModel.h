@@ -21,7 +21,7 @@ class SettingsModel : public QAbstractItemModel
     Q_OBJECT
 public:
     explicit SettingsModel(QObject *parent = nullptr);
-    ~SettingsModel() = default;
+	~SettingsModel();
 
     //Adds child item from given parent item (parentIdx)
     void addItem(QObject* item, const QModelIndex &parentIdx);
@@ -37,7 +37,7 @@ public:
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
+	void clear();
     /* Settings Loading */
     void loadSettings(const std::string& strFileName);
     void saveSettings(const std::string& strFileName);

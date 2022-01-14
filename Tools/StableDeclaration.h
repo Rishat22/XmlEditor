@@ -25,6 +25,7 @@ class QLabel;
 class QLineEdit;
 class QTreeView;
 class QPlainTextEdit;
+class QAbstractItemModel;
 
 class CGraphicsItem;
 class CItemComboBox;

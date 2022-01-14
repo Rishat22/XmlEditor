@@ -15,6 +15,7 @@ public:
     std::string GetDescription() const;
 	void SetData(const std::string& strTag, const std::string& strData);
 	void SetData(const std::string& strData);
+	std::string GetStrData(const QVariant& value);
 private:
 	void SetName(const std::string& strName);
     void SetType(const std::string& strType);

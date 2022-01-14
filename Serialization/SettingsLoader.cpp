@@ -41,15 +41,36 @@ bool SettingsLoader::LoadTagsInfo(const std::string& strFileName)
 	}
 }
 
+
+void SettingsLoader::Iterate(CXmlNode* parentNode, const QModelIndex & index, const QAbstractItemModel* model)
+{
+	 if (!index.isValid())
+		 return;
+	 const auto& tagName = model->data(model->index(index.row(), SettingsColumnsType::TagName, index.parent())).toString().toStdString();
+	 auto nameNode = NewNode(tagName, parentNode);
+	 const auto& tagValue = model->data(model->index(index.row(), SettingsColumnsType::Value, index.parent()));
+	 if(tagValue.isValid())
+	 {
+		 SettingTagInfo tagInfo;
+		 nameNode->SetValue(tagInfo.GetStrData(tagValue));
+	 }
+	 if (!model->hasChildren(index) || (index.flags() & Qt::ItemNeverHasChildren))
+	 {
+		  return;
+	 }
+	 for (int i = 0; i < model->rowCount(index); ++i)
+	 {
+		 Iterate(nameNode, model->index(i, 0, index), model);
+	 }
+}
+
 bool SettingsLoader::Save(const std::string& strFileName)
 {
-	/*CXmlNode* document = */NewDocument(strFileName);
-
-//	CXmlNode* parentNode = NewNode("MainSettings", document);
-//	BaseSetting base_setting;
-//	CXmlNode* nameNode = NewNode(base_setting.GetTag("NameWidget"), parentNode);
-//	auto strData = base_setting.GetData().toString();
-//	nameNode->SetValue(strData);
+	CXmlNode* document = NewDocument(strFileName);
+	for(auto curRow = 0; curRow < m_SourceModel.rowCount(); curRow++)
+	{
+		Iterate(document, m_SourceModel.index(curRow, 0), &m_SourceModel);
+	}
 
 	bool bRes = SaveDocument();
 

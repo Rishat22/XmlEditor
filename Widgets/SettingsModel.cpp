@@ -9,6 +9,11 @@ SettingsModel::SettingsModel(QObject *parent)
 	m_RootItem = new QObject(this);
 }
 
+SettingsModel::~SettingsModel()
+{
+	delete m_RootItem;
+}
+
 void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
 {
 	beginInsertRows(parentIdx, rowCount(parentIdx), rowCount(parentIdx));
@@ -61,6 +66,14 @@ int SettingsModel::rowCount(const QModelIndex &parent) const
 int SettingsModel::columnCount(const QModelIndex& /*parent*/) const
 {
 	return m_NameColumns.count();
+}
+
+void SettingsModel::clear()
+{
+	beginResetModel();
+	delete m_RootItem;
+	m_RootItem = new QObject(this);
+	endResetModel();
 }
 
 
@@ -123,11 +136,13 @@ bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int
 {
 	if(role != Qt::EditRole)
 		return false;
+
 	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
 }
 
 void SettingsModel::loadSettings(const std::string& strFileName)
 {
+	clear();
 	m_SettingsLoader.Load(strFileName);
 }
 

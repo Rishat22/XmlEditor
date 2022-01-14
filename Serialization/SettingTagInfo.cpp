@@ -134,6 +134,11 @@ void SettingTagInfo::SetData(const std::string& strData)
 	}
 }
 
+std::string SettingTagInfo::GetStrData(const QVariant& value)
+{
+	return value.toString().toStdString();
+}
+
 void SettingTagInfo::SetType(const std::string& strType)
 {
 	const auto typeIt = StrNotationOfTypesList.find(strType);

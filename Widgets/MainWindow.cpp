@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	m_FilterDataModel.setSourceModel(&m_SourceModel);
 	m_SettingsView->setModel(&m_FilterDataModel);
+	m_SettingsView->setItemDelegate(new GeneralItemsDelegate(m_SettingsView));
+
 	m_MainLayout->addWidget(m_SettingsView);
 
 	m_TagDescriptionView->setReadOnly(true);
@@ -102,10 +104,12 @@ void MainWindow::loadData(const std::string& strFileName)
 {
 	if(strFileName.empty())
 		return;
+
 	m_SourceModel.loadSettings(strFileName);
+
 	m_SettingsView->expandAll();
-	m_SettingsView->resizeColumnToContents(SettingsColumnsType::TagName);
-	m_SettingsView->setItemDelegate(new GeneralItemsDelegate(m_SettingsView));
+	m_SettingsView->setColumnWidth(SettingsColumnsType::TagName, m_SettingsView->width() * .4);
+	m_SettingsView->setColumnWidth(SettingsColumnsType::Type, m_SettingsView->width() * .2);
 }
 
 void MainWindow::saveData(const std::string& strFileName)
@@ -134,4 +138,8 @@ color: rgba(255, 255, 255, 255);}");
 void MainWindow::BtnSearchClicked(const QString& text)
 {
 	m_FilterDataModel.FilterData(text);
+	if(text.isEmpty())
+	{
+		m_SettingsView->expandAll();
+	}
 }
