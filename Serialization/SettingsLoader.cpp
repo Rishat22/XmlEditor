@@ -42,7 +42,7 @@ bool SettingsLoader::LoadTagsInfo(const std::string& strFileName)
 }
 
 
-void SettingsLoader::Iterate(CXmlNode* parentNode, const QModelIndex & index, const QAbstractItemModel* model)
+void SettingsLoader::SaveChildBranches(CXmlNode* parentNode, const QModelIndex & index, const QAbstractItemModel* model)
 {
 	 if (!index.isValid())
 		 return;
@@ -60,7 +60,7 @@ void SettingsLoader::Iterate(CXmlNode* parentNode, const QModelIndex & index, co
 	 }
 	 for (int i = 0; i < model->rowCount(index); ++i)
 	 {
-		 Iterate(nameNode, model->index(i, 0, index), model);
+		 SaveChildBranches(nameNode, model->index(i, 0, index), model);
 	 }
 }
 
@@ -69,7 +69,7 @@ bool SettingsLoader::Save(const std::string& strFileName)
 	CXmlNode* document = NewDocument(strFileName);
 	for(auto curRow = 0; curRow < m_SourceModel.rowCount(); curRow++)
 	{
-		Iterate(document, m_SourceModel.index(curRow, 0), &m_SourceModel);
+		SaveChildBranches(document, m_SourceModel.index(curRow, 0), &m_SourceModel);
 	}
 
 	bool bRes = SaveDocument();

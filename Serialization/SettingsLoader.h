@@ -26,7 +26,7 @@ private:
 	bool LoadTagsInfo(const std::string& strFileName);
 	bool GetCurrentParentTag(std::string& tagName);
 	bool GetCurrentTag(std::string& tagName);
-	void Iterate(CXmlNode* parentNode, const QModelIndex& index, const QAbstractItemModel* model);
+	void SaveChildBranches(CXmlNode* parentNode, const QModelIndex& index, const QAbstractItemModel* model);
 private:
 	TagsInfoLoader m_TagsInfoLoader;
 	std::list<std::shared_ptr<BaseSetting>> m_Settings;
