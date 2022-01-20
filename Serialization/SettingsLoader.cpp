@@ -126,21 +126,25 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 {
 	bool bRes = true;
 
+	std::string currTagName;
+	SettingTagInfo tagInfo;
 	try
 	{
-		std::string currTagName;
-		SettingTagInfo tagInfo;
-		if(GetCurrentTag(currTagName) && m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo))
+		if(GetCurrentTag(currTagName))
 		{
+			const auto isFind = m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo);
 			tagInfo.SetData(strNodeValue);
 			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
+			if(!isFind)
+			{
+				throw Tools::UnknownSettingsException();
+			}
 		}
-		else
-			std::cout << "can not find tag: " << currTagName.data();
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{
 		std::cout << "Error loading Settings." << std::endl;
+		std::cout << "Tag: " << currTagName.data() << std::endl;
 		std::cout << "Value = " << strNodeValue.data() << std::endl;
 		exception.what();
 	}

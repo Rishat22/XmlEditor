@@ -8,7 +8,7 @@ namespace Serialization
 class SettingTagInfo
 {
 public:
-    SettingTagInfo() = default;
+	SettingTagInfo();
     SettingTagInfo(const std::string& tagName);
 	std::string Name() const;
     QVariant GetData() const;

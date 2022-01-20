@@ -2,9 +2,7 @@
 #define FILTER_DATA_MODEL_H
 
 #include <QObject>
-#include <QDebug>
 #include <QSortFilterProxyModel>
-#include <QThread>
 
 class FilterDataModel : public QSortFilterProxyModel
 {

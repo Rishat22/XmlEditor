@@ -1,4 +1,5 @@
 #include "WdgSearch.h"
+#include <QAction>
 
 WdgSearch::WdgSearch(QWidget *parent)
 	: QWidget(parent)
@@ -12,16 +13,29 @@ WdgSearch::WdgSearch(QWidget *parent)
 	m_MainLayout->addWidget(m_SearchBtn);
 	m_MainLayout->addStretch();
 
-	connect(m_SearchBtn, &QPushButton::clicked,
-	this, [&]()
-	{
-		emit TextSearch(m_SearchEdit->text());
-	}
-	);
+	connect(m_SearchBtn, &QPushButton::clicked, this, &WdgSearch::MakeTextSearch);
 
 	m_MainLayout->setContentsMargins(0, 0, 0, 0);
 	SetStyleSheet();
 	setLayout(m_MainLayout);
+
+	auto findAct = new QAction(this);
+	findAct->setShortcuts(QKeySequence::Find);
+	connect(findAct, &QAction::triggered, this, &WdgSearch::SetLineEditFocus);
+	this->addAction(findAct);
+
+	connect(m_SearchEdit, &QLineEdit::returnPressed, m_SearchBtn, &QPushButton::click);
+
+}
+
+void WdgSearch::MakeTextSearch()
+{
+	emit TextSearch(m_SearchEdit->text());
+}
+
+void WdgSearch::SetLineEditFocus()
+{
+	m_SearchEdit->setFocus();
 }
 
 auto setColorButton = [](QPushButton* button, QString color){

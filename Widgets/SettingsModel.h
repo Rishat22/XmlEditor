@@ -4,16 +4,16 @@
 #include <QAbstractItemModel>
 #include "Serialization/SettingsLoader.h"
 
-const std::string descriptionPropertyName = "Description";
-
 using namespace Serialization;
 
 /* ToDo It can put all the functionality with columns in a separate class */
+const QStringList modelPropertyNames{"TagName", "Type", "Value", "Description"};
 enum SettingsColumnsType
 {
 	TagName = 0,
 	Type,
-	Value
+	Value,
+	Description
 };
 
 class SettingsModel : public QAbstractItemModel

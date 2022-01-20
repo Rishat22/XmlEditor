@@ -2,10 +2,11 @@
 
 SettingsModel::SettingsModel(QObject *parent)
 	: QAbstractItemModel(parent)
-	, m_NameColumns{"TagName", "Type", "Value"}
 	, m_SettingsLoader(*this)
 {
-	//Creating instance of virtual root item
+	// The table consists of columns TagName, Type, Value
+	std::copy(modelPropertyNames.begin(), modelPropertyNames.begin() + SettingsColumnsType::Description, std::back_inserter(m_NameColumns));
+	// Creating instance of virtual root item
 	m_RootItem = new QObject(this);
 }
 
@@ -24,9 +25,9 @@ void SettingsModel::addItem(QObject *item, const QModelIndex &parentIdx)
 void SettingsModel::updateItem(QObject* item, const SettingTagInfo& tagInfo)
 {
 	auto tagValue = tagInfo.GetData();
-	item->setProperty(m_NameColumns.at(SettingsColumnsType::Type).toUtf8(), tagValue.typeName());
-	item->setProperty(m_NameColumns.at(SettingsColumnsType::Value).toUtf8(), tagValue);
-	item->setProperty(descriptionPropertyName.data(), tagInfo.GetDescription().data());
+	item->setProperty(modelPropertyNames.at(SettingsColumnsType::Type).toUtf8(), tagValue.typeName());
+	item->setProperty(modelPropertyNames.at(SettingsColumnsType::Value).toUtf8(), tagValue);
+	item->setProperty(modelPropertyNames.at(SettingsColumnsType::Description).toUtf8(), tagInfo.GetDescription().data());
 }
 
 QObject *SettingsModel::objByIndex(const QModelIndex &index) const
@@ -108,7 +109,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 	switch (role) {
 		case Qt::DisplayRole:
 		{
-			auto value = objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+			auto value = objByIndex(index)->property(modelPropertyNames.at(index.column()).toUtf8());
 			if(index.column() == SettingsColumnsType::Value && value.type() == QVariant::StringList)
 			{
 				return (value.toStringList().empty()) ? QString() : value.toStringList().first();
@@ -117,12 +118,12 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 		}
 		case Qt::EditRole:
 		{
-			return objByIndex(index)->property(m_NameColumns.at(index.column()).toUtf8());
+			return objByIndex(index)->property(modelPropertyNames.at(index.column()).toUtf8());
 		}
 		case Qt::UserRole:
 		case Qt::ToolTipRole:
 		{
-			return objByIndex(index)->property(descriptionPropertyName.data());
+			return objByIndex(index)->property(modelPropertyNames.at(SettingsColumnsType::Description).toUtf8());
 		}
 		case Qt::TextAlignmentRole:
 			return (index.column() == SettingsColumnsType::TagName) ? Qt::AlignLeft : Qt::AlignCenter;
@@ -137,7 +138,7 @@ bool SettingsModel::setData(const QModelIndex &index, const QVariant &value, int
 	if(role != Qt::EditRole)
 		return false;
 
-	return objByIndex(index)->setProperty(m_NameColumns.at(index.column()).toUtf8(), value);
+	return objByIndex(index)->setProperty(modelPropertyNames.at(index.column()).toUtf8(), value);
 }
 
 void SettingsModel::loadSettings(const std::string& strFileName)

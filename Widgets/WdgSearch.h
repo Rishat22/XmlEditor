@@ -14,6 +14,9 @@ public:
 
 signals:
     void TextSearch(const QString&);
+private slots:
+	void MakeTextSearch();
+	void SetLineEditFocus();
 private:
     void SetStyleSheet();
 private:

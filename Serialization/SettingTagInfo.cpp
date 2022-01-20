@@ -21,6 +21,15 @@ std::map<std::string, QVariant> StrNotationOfTypesList
 	std::make_pair("List", QStringList())
 };
 
+SettingTagInfo::SettingTagInfo()
+	: m_Name("")
+	, m_Type(QVariant::String)
+	, m_Data(QString())
+	, m_SettingDescription("")
+{
+
+}
+
 SettingTagInfo::SettingTagInfo(const std::string& tagName)
 	: m_Name(tagName)
 	, m_Data(QVariant())
