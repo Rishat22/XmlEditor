@@ -21,13 +21,14 @@ public:
 
 private slots:
 	void SetDescriptionText(const QString& descriptionText);
-    void BtnSearchClicked(const QString& text);
+	void SearchTextByType(const QString& searchText, const QString& filterType);
     void saveData(const std::string& strFileName);
     void loadData(const std::string& strFileName);
 private:
     void AddMenuBar();
     void SetStyleSheet();
-    QList<QAction*> CreateFileActions();
+	QMenu* CreateFileMenu();
+	QMenu* CreateSearchMenu();
 private:
     QVBoxLayout* m_MainLayout;
 	SettingsTreeView* m_SettingsView;

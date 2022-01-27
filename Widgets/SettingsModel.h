@@ -10,7 +10,8 @@ using namespace Serialization;
 const QStringList modelPropertyNames{"TagName", "Type", "Value", "Description"};
 enum SettingsColumnsType
 {
-	TagName = 0,
+	Begin = 0,
+	TagName = Begin,
 	Type,
 	Value,
 	Description

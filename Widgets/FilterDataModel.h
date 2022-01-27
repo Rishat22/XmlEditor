@@ -9,10 +9,8 @@ class FilterDataModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit FilterDataModel(QObject *parent = nullptr);
-
     void FilterData(const QString& pattern);
 
-    // QSortFilterProxyModel interface
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 

@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, m_MainLayout(new QVBoxLayout())
 	, m_SettingsView(new SettingsTreeView(this))
 	, m_TagDescriptionView(new QPlainTextEdit(this))
-	, m_WdgSearch(new WdgSearch(this))
+	, m_WdgSearch(new WdgSearch())
 	, m_lasSelectedPath(QString())
 {
 	setObjectName("MainWindow");
@@ -27,10 +27,13 @@ MainWindow::MainWindow(QWidget *parent)
 	m_TagDescriptionView->setReadOnly(true);
 	connect(m_SettingsView, &SettingsTreeView::showDescription, this, &MainWindow::SetDescriptionText);
 	m_MainLayout->addWidget(m_TagDescriptionView);
-
 	m_MainLayout->addStretch();
-	connect(m_WdgSearch, &WdgSearch::TextSearch, this, &MainWindow::BtnSearchClicked);
-	m_MainLayout->addWidget(m_WdgSearch);
+
+	for(const auto& propertyName : modelPropertyNames)
+	{
+		m_WdgSearch->addFilterType(propertyName);
+	}
+	connect(m_WdgSearch, &WdgSearch::SearchTextByType, this, &MainWindow::SearchTextByType);
 	m_MainLayout->setStretch(0, 1); //Set Priorities to resize TreeView
 
 	auto mainWidget = new QWidget;
@@ -45,15 +48,16 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::AddMenuBar()
 {
 	auto menuBar = new QMenuBar(this);
-	auto fileMenu = new QMenu(tr("File"));
-	menuBar->addMenu(fileMenu);
-	fileMenu->addActions(CreateFileActions());
+
+	menuBar->addMenu(CreateFileMenu());
+	menuBar->addMenu(CreateSearchMenu());
 
 	this->layout()->setMenuBar(menuBar);
 }
 
-QList<QAction*> MainWindow::CreateFileActions()
+QMenu* MainWindow::CreateFileMenu()
 {
+	auto fileMenu = new QMenu(tr("File"));
 	QList<QAction*> fileActions;
 
 	auto openAct = new QAction(tr("&Open..."), this);
@@ -92,7 +96,23 @@ QList<QAction*> MainWindow::CreateFileActions()
 	connect(exitAct, &QAction::triggered, this, &MainWindow::close);
 	fileActions.push_back(exitAct);
 
-	return fileActions;
+	fileMenu->addActions(fileActions);
+	return fileMenu;
+}
+
+QMenu* MainWindow::CreateSearchMenu()
+{
+	auto searchMenu = new QMenu(tr("Search"));
+	auto searchAct = new QAction(tr("Search"), this);
+	searchAct->setShortcuts(QKeySequence::Find);
+	searchAct->setStatusTip(tr("Changing search parameters"));
+	connect(searchAct, &QAction::triggered, this,
+	[&]()
+	{
+		m_WdgSearch->show();
+	});
+	searchMenu->addAction(searchAct);
+	return searchMenu;
 }
 
 void MainWindow::SetDescriptionText(const QString& descriptionText)
@@ -135,10 +155,24 @@ background: rgba(045, 045, 045, 255);alternate-background-color: rgba(070, 070, 
 color: rgba(255, 255, 255, 255);}");
 }
 
-void MainWindow::BtnSearchClicked(const QString& text)
+void MainWindow::SearchTextByType(const QString& searchText, const QString& filterType)
 {
-	m_FilterDataModel.FilterData(text);
-	if(text.isEmpty())
+	const auto findTypeIt = std::find(modelPropertyNames.begin(), modelPropertyNames.end(), filterType);
+	if(findTypeIt != modelPropertyNames.end())
+	{
+		const auto columnType = std::distance(modelPropertyNames.begin(), findTypeIt);
+		if(columnType == SettingsColumnsType::Description)
+		{
+			m_FilterDataModel.setFilterKeyColumn(SettingsColumnsType::Begin);
+			m_FilterDataModel.setFilterRole(Qt::UserRole);
+		}
+		else
+		{
+			m_FilterDataModel.setFilterKeyColumn(columnType);
+		}
+	}
+	m_FilterDataModel.FilterData(searchText);
+	if(searchText.isEmpty())
 	{
 		m_SettingsView->expandAll();
 	}

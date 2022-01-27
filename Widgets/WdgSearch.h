@@ -1,28 +1,25 @@
 #ifndef WDGSEARCH_H
 #define WDGSEARCH_H
-#include <QLineEdit>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QString>
-#include <QWidget>
+#include "StableDeclaration.h"
+#include <QFrame>
 
-class WdgSearch : public QWidget
+class WdgSearch : public QFrame
 {
     Q_OBJECT
 public:
     explicit WdgSearch(QWidget *parent = nullptr);
-
+	void addFilterType(const QString& type);
 signals:
-    void TextSearch(const QString&);
+	void SearchTextByType(const QString&, const QString&);
 private slots:
 	void MakeTextSearch();
-	void SetLineEditFocus();
 private:
+	void showEvent(QShowEvent *event) override;
     void SetStyleSheet();
 private:
+	QComboBox* m_SearchType;
     QLineEdit* m_SearchEdit;
     QPushButton* m_SearchBtn;
-    QHBoxLayout* m_MainLayout;
 };
 
 #endif // WDGSEARCH_H

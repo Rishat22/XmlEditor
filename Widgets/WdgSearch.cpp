@@ -1,41 +1,49 @@
-#include "WdgSearch.h"
 #include <QAction>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QString>
+#include <QComboBox>
+#include "WdgSearch.h"
 
 WdgSearch::WdgSearch(QWidget *parent)
-	: QWidget(parent)
-	, m_SearchEdit(new QLineEdit)
+	: QFrame(parent, Qt::Dialog)
+	, m_SearchType(new QComboBox(this))
+	, m_SearchEdit(new QLineEdit(this))
 	, m_SearchBtn(new QPushButton("Search", this))
-	, m_MainLayout( new QHBoxLayout)
 {
 	setObjectName("WdgSearch");
 	m_SearchBtn->setObjectName("SearchButton");
-	m_MainLayout->addWidget(m_SearchEdit);
-	m_MainLayout->addWidget(m_SearchBtn);
-	m_MainLayout->addStretch();
 
+	const auto m_MainLayout= new QVBoxLayout();
+	const auto lineEditLayout= new QHBoxLayout();
+	lineEditLayout->addWidget(m_SearchEdit);
+	lineEditLayout->addWidget(m_SearchBtn);
+
+	m_MainLayout->addWidget(m_SearchType);
+	m_MainLayout->addLayout(lineEditLayout);
 	connect(m_SearchBtn, &QPushButton::clicked, this, &WdgSearch::MakeTextSearch);
+	connect(m_SearchEdit, &QLineEdit::returnPressed, m_SearchBtn, &QPushButton::click);
 
-	m_MainLayout->setContentsMargins(0, 0, 0, 0);
 	SetStyleSheet();
 	setLayout(m_MainLayout);
 
-	auto findAct = new QAction(this);
-	findAct->setShortcuts(QKeySequence::Find);
-	connect(findAct, &QAction::triggered, this, &WdgSearch::SetLineEditFocus);
-	this->addAction(findAct);
+}
 
-	connect(m_SearchEdit, &QLineEdit::returnPressed, m_SearchBtn, &QPushButton::click);
-
+void WdgSearch::addFilterType(const QString& type)
+{
+	m_SearchType->addItem(type);
 }
 
 void WdgSearch::MakeTextSearch()
 {
-	emit TextSearch(m_SearchEdit->text());
+	emit SearchTextByType(m_SearchEdit->text(), m_SearchType->currentText());
 }
 
-void WdgSearch::SetLineEditFocus()
+void WdgSearch::showEvent(QShowEvent* event)
 {
 	m_SearchEdit->setFocus();
+	QWidget::showEvent(event);
 }
 
 auto setColorButton = [](QPushButton* button, QString color){
