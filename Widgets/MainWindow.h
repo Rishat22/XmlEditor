@@ -20,8 +20,9 @@ private slots:
 	void SearchTextByType(const QString& searchText, const QString& filterType);
     void saveData(const std::string& strFileName);
     void loadData(const std::string& strFileName);
+
 private:
-	static void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
+	static void customMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
     void AddMenuBar();
     void SetStyleSheet();
 	QMenu* CreateFileMenu();

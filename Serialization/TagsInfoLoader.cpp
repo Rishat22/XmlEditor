@@ -60,14 +60,14 @@ bool TagsInfoLoader::XmlNodeDecode(const std::string& strNodeValue)
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{
-		std::cout << "Error loading tag information." << std::endl;
-		std::cout << "Value = " << strNodeValue.data() << std::endl;
-		exception.what();
+		qCritical() << "Error loading tag information.";
+		qWarning() << "Value = " << strNodeValue.data();
+		qWarning() << exception.what();
 		return false;
 	}
 	catch (const Tools::TypeException& exception)
 	{
-		exception.what();
+		qWarning() << exception.what();
 		return false;
 	}
 

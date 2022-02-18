@@ -36,7 +36,10 @@ bool SettingsLoader::LoadTagsInfo(const std::string& strFileName)
 	}
 	else
 	{
-		std::cout << "Information about the current name of the setting was not found: " << tagInfoFileName << std::endl;
+		qCritical() << "Information about the current file settings was not found: " << tagInfoFileName.data();
+		qInfo() << "If '" << tagInfoFileName.data()
+				<< "' is correct name of file settings, then please add information about it to the database!";
+
 		return false;
 	}
 }
@@ -109,7 +112,7 @@ bool SettingsLoader::XmlNodeBegin(void)
 		}
 
 		newItem->setObjectName(currTagName.data());
-		newItem->setProperty("TagName", currTagName.data());
+		newItem->setProperty(modelPropertyNames.at(SettingsColumnsType::TagName).toUtf8(), currTagName.data());
 		if(m_RootItem == nullptr)
 		{
 			m_ParentItem = newItem;
@@ -132,25 +135,30 @@ bool SettingsLoader::XmlNodeDecode(const std::string& strNodeValue)
 	{
 		if(GetCurrentTag(currTagName))
 		{
-			const auto isFind = m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo);
-			tagInfo.SetData(strNodeValue);
-			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
-			if(!isFind)
+			if(!m_TagsInfoLoader.FindTagInfo(currTagName, tagInfo))
 			{
 				throw Tools::UnknownSettingsException();
 			}
+			tagInfo.SetData(strNodeValue);
+			m_SourceModel.updateItem(m_CurrentItem, tagInfo);
 		}
 	}
 	catch (const Tools::LoadSettingsException& exception)
 	{
-		std::cout << "Error loading Settings." << std::endl;
-		std::cout << "Tag: " << currTagName.data() << std::endl;
-		std::cout << "Value = " << strNodeValue.data() << std::endl;
-		exception.what();
+		SettingTagInfo strTagInfo;
+		strTagInfo.SetName(currTagName);
+		strTagInfo.SetData(strNodeValue);
+		strTagInfo.SetDescription(tagInfo.GetDescription());
+		m_SourceModel.updateItem(m_CurrentItem, strTagInfo);
+
+		qCritical() << "Error loading Settings.";
+		qWarning() << "Tag: " << currTagName.data() << "Value = " << strNodeValue.data();
+		qWarning() << exception.what();
+		qInfo() << "If this tag info '" << currTagName.data() << "' is correct, please update the information on it in the database!";
 	}
 	catch (const Tools::TypeException& exception)
 	{
-		exception.what();
+		qWarning() << exception.what();
 		bRes = false;
 	}
 	catch (...)
