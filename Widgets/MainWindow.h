@@ -7,10 +7,6 @@
 #include "SettingsModel.h"
 #include "FilterDataModel.h"
 
-namespace Ui {
-class MainWindow;
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -25,14 +21,15 @@ private slots:
     void saveData(const std::string& strFileName);
     void loadData(const std::string& strFileName);
 private:
+	static void myMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
     void AddMenuBar();
     void SetStyleSheet();
 	QMenu* CreateFileMenu();
 	QMenu* CreateSearchMenu();
 private:
-    QVBoxLayout* m_MainLayout;
 	SettingsTreeView* m_SettingsView;
 	QPlainTextEdit* m_TagDescriptionView;
+	QPlainTextEdit* m_LogsInfoView;
 	WdgSearch* m_WdgSearch;
 	SettingsModel m_SourceModel;
     FilterDataModel m_FilterDataModel;

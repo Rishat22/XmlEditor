@@ -4,15 +4,16 @@
 #include <QFileDialog>
 #include <QPlainTextEdit>
 #include <QDir>
+#include "COutputLogger.h"
 #include "WdgSearch.h"
-#include "MainWindow.h"
 #include "GeneralItemsDelegate.h"
+#include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, m_MainLayout(new QVBoxLayout())
 	, m_SettingsView(new SettingsTreeView(this))
 	, m_TagDescriptionView(new QPlainTextEdit(this))
+	, m_LogsInfoView(new QPlainTextEdit(this))
 	, m_WdgSearch(new WdgSearch())
 	, m_lasSelectedPath(QString())
 {
@@ -22,27 +23,87 @@ MainWindow::MainWindow(QWidget *parent)
 	m_SettingsView->setModel(&m_FilterDataModel);
 	m_SettingsView->setItemDelegate(new GeneralItemsDelegate(m_SettingsView));
 
-	m_MainLayout->addWidget(m_SettingsView);
+	auto topLayout = new QHBoxLayout();
+	topLayout->addWidget(m_SettingsView);
 
 	m_TagDescriptionView->setReadOnly(true);
 	connect(m_SettingsView, &SettingsTreeView::showDescription, this, &MainWindow::SetDescriptionText);
-	m_MainLayout->addWidget(m_TagDescriptionView);
-	m_MainLayout->addStretch();
+	topLayout->addWidget(m_TagDescriptionView);
+	topLayout->addStretch();
 
 	for(const auto& propertyName : modelPropertyNames)
 	{
 		m_WdgSearch->addFilterType(propertyName);
 	}
 	connect(m_WdgSearch, &WdgSearch::SearchTextByType, this, &MainWindow::SearchTextByType);
-	m_MainLayout->setStretch(0, 1); //Set Priorities to resize TreeView
+	topLayout->setStretch(0, 5); //Set Priorities to resize TreeView
+	topLayout->setStretch(1, 2); //Set Priorities to resize DescriptionView widget
 
 	auto mainWidget = new QWidget;
-	mainWidget->setLayout(m_MainLayout);
+	auto mainLayout = new QVBoxLayout();
+	mainLayout->addLayout(topLayout);
+
+	m_LogsInfoView->setReadOnly(true);
+
+	mainLayout->addWidget(m_LogsInfoView);
+	mainLayout->setStretch(0, 5); //Set Priorities to resize top layout
+	mainLayout->setStretch(1, 2); //Set Priorities to resize logsInfo widget
+
+	mainWidget->setLayout(mainLayout);
 	setCentralWidget(mainWidget);
 
 	SetStyleSheet();
 	AddMenuBar();
 	resize(1000, 600);
+
+	auto& manager = COutputLoggerManager::GetInstance();
+	manager.AddLogger(new CConsoleLogger());
+	manager.AddLogger(new CPlainTextLogger(m_LogsInfoView));
+	qInstallMessageHandler(customMessageHandler);
+}
+
+void MainWindow::customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+	QString resultMsg;
+	QRegExp rx("([\\w-]+::[\\w-]+)");
+	if (rx.indexIn(context.function) == -1)
+	{
+		return;
+	}
+	QString function = rx.cap(1);
+	QString msgSep = (msg.length() > 0) ? " >> " : "";
+
+	switch (type) {
+		case QtInfoMsg:
+		{
+			resultMsg = QString("Info: %1%2%3").arg(function).arg(msgSep).arg(msg);
+			break;
+		}
+		case QtDebugMsg:
+		{
+			resultMsg = QString("Debug: %1%2%3").arg(function).arg(msgSep).arg(msg);
+			break;
+		}
+		case QtWarningMsg:
+		{
+			resultMsg = QString("Warning: %1%2%3").arg(function).arg(msgSep).arg(msg);
+			break;
+		}
+		case QtCriticalMsg:
+		{
+			resultMsg = QString("Critical: %1%2%3").arg(function).arg(msgSep).arg(msg);
+			break;
+		}
+		case QtFatalMsg:
+		{
+			resultMsg = QString("Fatal: %1%2%3").arg(function).arg(msgSep).arg(msg);
+			abort();
+			break;
+		}
+	}
+	auto& manager = COutputLoggerManager::GetInstance();
+
+	manager.Print(type, resultMsg);
 }
 
 void MainWindow::AddMenuBar()
@@ -149,10 +210,11 @@ void MainWindow::SetStyleSheet()
 	QString styleObj = '#' + this->objectName() + "{background-color: rgb(128, 128, 128);}";
 	setStyleSheet(styleObj);
 	/* ToDo temp hard-code style */
-	m_TagDescriptionView->setStyleSheet("QPlainTextEdit, QTextEdit{font-style: normal;font-size: 12pt;font-family: \"Liberation Mono\";\
+	const auto& textEditStyle = "QPlainTextEdit, QTextEdit{font-style: normal;font-size: 12pt;font-family: \"Liberation Mono\";\
 padding: 3px;border: 1px solid rgba(255, 255, 255, 255);\
 background: rgba(045, 045, 045, 255);alternate-background-color: rgba(070, 070, 070, 255);\
-color: rgba(255, 255, 255, 255);}");
+color: rgba(255, 255, 255, 255);}";
+	m_TagDescriptionView->setStyleSheet(textEditStyle);
 }
 
 void MainWindow::SearchTextByType(const QString& searchText, const QString& filterType)
